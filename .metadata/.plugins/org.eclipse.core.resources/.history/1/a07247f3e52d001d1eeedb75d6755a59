@@ -1,0 +1,5 @@
+package com.eshop.admin.user;
+
+public class UserRestController {
+
+}
