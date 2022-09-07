@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "users")
@@ -121,6 +122,13 @@ public class User {
 	public String toString() {
 		return "User [id=" + id + ", email=" + email + ", password=" + password + ", firstName=" + firstName
 				+ ", lastName=" + lastName + ", photos=" + photos + ", enabled=" + enabled + ", roles=" + roles + "]";
+	}
+	
+	@Transient
+	public String getPhotosImagePath() {
+		if (id == null || photos == null) return "/images/default-user.png";
+		
+		return "/users-photos/" + this.id + "/" + this.photos;
 	}
 
 }
