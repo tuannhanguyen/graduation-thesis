@@ -63,4 +63,8 @@ public class ShopUserDetails implements UserDetails {
 		return user.isEnabled();
 	}
 
+	public String getFullName() {
+		return this.user.getFirstName() + " " + this.user.getLastName();
+	}
+
 }
