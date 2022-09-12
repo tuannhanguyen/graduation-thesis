@@ -58,11 +58,9 @@ public class Role {
 		this.description = description;
 	}
 
-
 	@Override
 	public String toString() {
 		return this.name;
 	}
-
 
 }
