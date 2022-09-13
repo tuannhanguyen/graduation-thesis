@@ -94,4 +94,15 @@ public class Category {
 		this.children = children;
 	}
 	
+	public void add(Category category) {
+		this.children.add(category);
+	}
+	
+	public Category() {
+	}
+
+	public Category(String name) {
+		this.name = name;
+	}
+	
 }

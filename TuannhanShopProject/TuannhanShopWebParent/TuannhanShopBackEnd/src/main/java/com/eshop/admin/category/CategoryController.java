@@ -20,4 +20,15 @@ public class CategoryController {
 		
 		return "categories/categories";
 	}
+	
+	@GetMapping("/categories/new")
+	public String newCategory(Model model) {
+		List<Category> listCategories = categoryService.listCategoriesUsedInForm();
+		
+		model.addAttribute("listCategories", listCategories);
+		model.addAttribute("category", new Category());
+		model.addAttribute("pageTitle", "Create new category");
+		
+		return "categories/category_form";
+	}
 }
