@@ -1,0 +1,5 @@
+package com.eshop.admin.category;
+
+public class CategoryService {
+
+}
