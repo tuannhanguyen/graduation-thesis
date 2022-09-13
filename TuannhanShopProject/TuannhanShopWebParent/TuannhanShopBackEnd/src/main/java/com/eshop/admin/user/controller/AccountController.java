@@ -1,4 +1,4 @@
-package com.eshop.admin.user;
+package com.eshop.admin.user.controller;
 
 import java.io.IOException;
 
@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.eshop.admin.FileUploadUtil;
 import com.eshop.admin.security.ShopUserDetails;
+import com.eshop.admin.user.UserService;
 import com.eshop.common.entity.User;
 
 @Controller
@@ -29,9 +30,9 @@ public class AccountController {
 		User user = userService.getByEmail(email);
 		model.addAttribute("user", user);
 
-		return "account_form";
+		return "/users/account_form";
 	}
-	
+
 	@PostMapping("/account/update")
 	public String saveDetails(User user, RedirectAttributes redirectAttributes,
 				@AuthenticationPrincipal ShopUserDetails loggedUser,
@@ -50,7 +51,7 @@ public class AccountController {
 			if (user.getPhotos().isEmpty()) user.setPhotos(null);
 			userService.updateAccount(user);
 		}
-		
+
 		loggedUser.setFirstName(user.getFirstName());
 		loggedUser.setLastName(user.getLastName());
 
