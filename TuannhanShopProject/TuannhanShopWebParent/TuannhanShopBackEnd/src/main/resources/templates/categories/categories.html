@@ -44,7 +44,7 @@
                     <tr th:each="category : ${listCategories}">
                         <td>[[${category.id}]]</td>
                         <td>
-                        	
+                        	<img th:src="@{${category.imagePath}}">
                         </td>
                         <td>[[${category.name}]]</td>
                         <td>[[${category.alias}]]</td>
