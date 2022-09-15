@@ -33,7 +33,11 @@
                     <tr>
                         <th th:replace="fragments :: column_link('id', 'ID')"/>
                         <th>Category Image</th>
-                        <th th:replace="fragments :: column_link('name', 'Category Name')" />
+                        <th>
+                            <a class="text-white" th:href="@{'/categories?sortDir=' + ${reverseSortDir}}">Category Name
+                                <span th:class="${reverseSortDir == 'desc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span> 
+                            </a>
+                        </th>
                         <th th:replace="fragments :: column_link('alias', 'Alias')"/>
                         <th th:replace="fragments :: column_link('enabled', 'Enabled')"/>
                         <th></th>
