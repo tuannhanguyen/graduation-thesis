@@ -26,10 +26,10 @@ public class FileUploadUtil {
 			throw new IOException("Could not save file: " + fileName, e);
 		}
 	}
-	
+
 	public static void cleanDir(String dir) {
 		Path dirPath = Paths.get(dir);
-		
+
 		try {
 			Files.list(dirPath).forEach(file -> {
 				if (!Files.isDirectory(file)) {
@@ -42,6 +42,16 @@ public class FileUploadUtil {
 			});
 		} catch (IOException e) {
 			System.out.println("Could not list directory: " + dirPath);
+		}
+	}
+
+	public static void removeDir(String dir) {
+		cleanDir(dir);
+
+		try {
+			Files.delete(Paths.get(dir));
+		} catch (IOException e) {
+
 		}
 	}
 

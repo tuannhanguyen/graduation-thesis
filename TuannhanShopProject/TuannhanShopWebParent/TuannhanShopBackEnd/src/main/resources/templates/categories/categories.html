@@ -41,7 +41,6 @@
                         <th th:replace="fragments :: column_link('alias', 'Alias')"/>
                         <th th:replace="fragments :: column_link('enabled', 'Enabled')"/>
                         <th></th>
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -52,22 +51,11 @@
                         </td>
                         <td>[[${category.name}]]</td>
                         <td>[[${category.alias}]]</td>
-                        <td>[[${category.enabled}]]</td>
                         <td>
-                        	<a th:if="${category.enabled == true}" class="fas fa-check-circle fa-2x icon-green"
-                        	   th:href="@{'/categories/' + ${category.id} + '/enabled/false'}"
-                        	   title="Disable this category"></a>
-                        	<a th:if="${category.enabled == false}" class="fas fa-circle fa-2x icon-dark"
-                        	   th:href="@{'/categories/' + ${category.id} + '/enabled/true'}"
-                        	   title="Enable this category"></a>
+                        	<div th:replace="fragments :: category_status"></div>
                         </td>
                         <td>
-                        	<a class="fas fa-edit fa-2x icon-green" th:href="@{'/categories/edit/' + ${category.id}}" 
-                        		title="Edit this category"></a>
-                            &nbsp;
-                            <a class="fas fa-trash fa-2x icon-dark link-delete" th:href="@{'categories/delete/' + ${category.id}}"
-                                th:userId="${category.id}"
-                                title="Delete this category"></a>
+                        	<div th:replace="fragments :: category_actions"></div>
                         </td>
                     </tr>
                 
@@ -75,46 +63,21 @@
             </table>
         </div>
         
-        
-        
-        <div class="modal fade text-center" id="confirmModal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Delete Confirmation</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                
-                <div class="modal-body">
-                    <span id="confirmText"></span>
-                </div>
-                
-                <div class="modal-footer">
-                    <a class="btn btn-success" href="" id="yesButton">Yes</a>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
-                </div>
-            </div>
-            </div>
-        </div>
+        <div th:replace="modal_fragments :: comfirm_modal"></div>
         
         <div th:replace="fragments :: footer"></div>
         
     </div>
+<script th:src="@{/js/common_list.js}"></script>
 <script type="text/javascript">
+    moduleURL = "[[@{/categories}]]"
+
     $(document).ready(() => {
         $(".link-delete").on('click', function(e) {
             e.preventDefault()
-            link = $(this)
-            userId = link.attr("userId")
-            $("#yesButton").attr("href", link.attr("href"))
-            $("#confirmText").text("Are you sure want to delete this user ID " + userId + " ?")
-            $("#confirmModal").modal()
+            showDeleteConfirmation($(this), 'category')
         })
     })
-    
-    function clearFilter() {
-        window.location = "[[@{/users}]]"
-    }
 </script>
 
 </body>

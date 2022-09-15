@@ -83,4 +83,31 @@ public class CategoryController {
 			return "redirect:/categories";
 		}
 	}
+
+	@GetMapping("/categories/{id}/enabled/{status}")
+	public String updateEnabled(@PathVariable(name = "id") Integer id,
+			@PathVariable(name = "status") boolean enabled,
+			RedirectAttributes redirectAttributes) throws CategoryNotFoundException {
+		categoryService.updateStatus(id, enabled);
+		String status = enabled ? "enabled" : "disabled";
+		String message = "The category ID " + id + " has been " + status;
+		redirectAttributes.addFlashAttribute("message", message);
+
+		return "redirect:/categories";
+	}
+
+	@GetMapping("/categories/delete/{id}")
+	public String deleteCategory(@PathVariable(name = "id") Integer id,
+			RedirectAttributes redirectAttributes) {
+		try {
+			categoryService.deleteCategory(id);
+			String categoryDir = "../category-images/" + id;
+			FileUploadUtil.removeDir(categoryDir);
+
+			redirectAttributes.addFlashAttribute("message", "The category with ID " + id + " has been deleted successfully" );
+		} catch (CategoryNotFoundException e) {
+			redirectAttributes.addFlashAttribute("message", e.getMessage());
+		}
+		return "redirect:/categories";
+	}
 }
