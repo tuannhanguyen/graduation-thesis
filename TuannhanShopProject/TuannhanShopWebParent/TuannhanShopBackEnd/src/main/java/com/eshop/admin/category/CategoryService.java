@@ -11,17 +11,22 @@ import java.util.TreeSet;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.eshop.admin.user.CategoryPageInfo;
 import com.eshop.common.entity.Category;
 
 @Service
 @Transactional
 public class CategoryService {
+	private static final int ROOR_CATEGORIES_PER_PAGE = 4;
 	@Autowired CategoryRepository categoryRepository;
 
-	public List<Category> listAll(String sortDir) {
+	public List<Category> listByPage(CategoryPageInfo pageInfo, int pageNum, String sortDir) {
 		Sort sort = Sort.by("name");
 
 		if (sortDir.equals("asc")) {
@@ -29,7 +34,14 @@ public class CategoryService {
 		} else if (sortDir.equals("desc")) {
 			sort = sort.descending();
 		}
-		List<Category> rootCategories = categoryRepository.findRootCategories(sort);
+
+		Pageable pageable = PageRequest.of(pageNum - 1, ROOR_CATEGORIES_PER_PAGE, sort);
+
+		Page<Category> pageCategories = categoryRepository.findRootCategories(pageable);
+		List<Category> rootCategories = pageCategories.getContent();
+
+		pageInfo.setTotalElements(pageCategories.getTotalElements());
+		pageInfo.setTotalPage(pageCategories.getTotalPages());
 
 		return listHierarchicalCategories(rootCategories, sortDir);
 	}

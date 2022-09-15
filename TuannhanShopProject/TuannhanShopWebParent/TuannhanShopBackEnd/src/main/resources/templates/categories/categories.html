@@ -34,7 +34,7 @@
                         <th th:replace="fragments :: column_link('id', 'ID')"/>
                         <th>Category Image</th>
                         <th>
-                            <a class="text-white" th:href="@{'/categories?sortDir=' + ${reverseSortDir}}">Category Name
+                            <a class="text-white" th:href="@{'/categories/page/' + ${currentPage} + '?sortDir=' + ${reverseSortDir}}">Category Name
                                 <span th:class="${reverseSortDir == 'desc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span> 
                             </a>
                         </th>
@@ -62,6 +62,8 @@
                 </tbody>
             </table>
         </div>
+        
+        <div th:replace="fragments :: pagination('/categories', 'top-level categories')"></div>
         
         <div th:replace="modal_fragments :: comfirm_modal"></div>
         

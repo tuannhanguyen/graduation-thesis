@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.eshop.admin.FileUploadUtil;
+import com.eshop.admin.user.CategoryPageInfo;
 import com.eshop.common.entity.Category;
 
 @Controller
@@ -22,12 +23,26 @@ public class CategoryController {
 	@Autowired CategoryService categoryService;
 
 	@GetMapping("/categories")
-	public String listAll(@Param("sortDir") String sortDir, Model model) {
+	public String listFirstPage(@Param("sortDir") String sortDir, Model model) {
+		return listByPage(1, sortDir, model);
+	}
+
+	@GetMapping("/categories/page/{pageNum}")
+	public String listByPage(@PathVariable(name = "pageNum") int pageNum,
+			@Param("sortDir") String sortDir, Model model) {
 		if (sortDir == null || sortDir.isEmpty()) {
 			sortDir = "asc";
 		}
-		List<Category> listCategories = categoryService.listAll(sortDir);
+
+		CategoryPageInfo pageInfo = new CategoryPageInfo();
+		List<Category> listCategories = categoryService.listByPage(pageInfo, pageNum, sortDir);
+
 		String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
+		model.addAttribute("totalPages", pageInfo.getTotalPage());
+		model.addAttribute("totalItems", pageInfo.getTotalElements());
+		model.addAttribute("currentPage", pageNum);
+		model.addAttribute("sortField", "name");
+		model.addAttribute("sortDir", sortDir);
 		model.addAttribute("listCategories", listCategories);
 		model.addAttribute("reverseSortDir", reverseSortDir);
 
