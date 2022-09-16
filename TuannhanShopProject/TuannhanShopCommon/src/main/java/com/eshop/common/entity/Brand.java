@@ -30,7 +30,7 @@ public class Brand {
 	@ManyToMany
 	@JoinTable(
 			name = "brands_categories",
-			joinColumns = @JoinColumn(name = "brands_id"),
+			joinColumns = @JoinColumn(name = "brand_id"),
 			inverseJoinColumns = @JoinColumn(name = "category_id"))
 	private Set<Category> categories = new HashSet<>();
 
