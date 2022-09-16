@@ -23,10 +23,11 @@ import com.eshop.common.entity.Category;
 @Service
 @Transactional
 public class CategoryService {
-	private static final int ROOR_CATEGORIES_PER_PAGE = 4;
+	public static final int ROOR_CATEGORIES_PER_PAGE = 4;
 	@Autowired CategoryRepository categoryRepository;
 
-	public List<Category> listByPage(CategoryPageInfo pageInfo, int pageNum, String sortDir) {
+	public List<Category> listByPage(CategoryPageInfo pageInfo, int pageNum, String sortDir,
+			String keyword) {
 		Sort sort = Sort.by("name");
 
 		if (sortDir.equals("asc")) {
@@ -37,13 +38,29 @@ public class CategoryService {
 
 		Pageable pageable = PageRequest.of(pageNum - 1, ROOR_CATEGORIES_PER_PAGE, sort);
 
-		Page<Category> pageCategories = categoryRepository.findRootCategories(pageable);
+		Page<Category> pageCategories = null;
+
+		if (keyword != null && !keyword.isEmpty()) {
+			pageCategories = categoryRepository.search(keyword, pageable);
+		} else {
+			pageCategories = categoryRepository.findRootCategories(pageable);
+		}
+
 		List<Category> rootCategories = pageCategories.getContent();
 
 		pageInfo.setTotalElements(pageCategories.getTotalElements());
 		pageInfo.setTotalPage(pageCategories.getTotalPages());
 
-		return listHierarchicalCategories(rootCategories, sortDir);
+		if (keyword != null && !keyword.isEmpty()) {
+			List<Category> searchResult = pageCategories.getContent();
+			for (Category category : searchResult) {
+				category.setHasChildren(category.getChildren().size() > 0);
+			}
+
+			return searchResult;
+		} else {
+			return listHierarchicalCategories(rootCategories, sortDir);
+		}
 	}
 
 	private List<Category> listHierarchicalCategories(List<Category> rootCategories, String sortDir) {
