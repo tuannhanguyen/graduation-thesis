@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: page_head('Categories')"></head>
+<body>
+    <div class="container-fluid">
+        <div th:replace="navigation :: menu"></div>
+        <div>
+            <h2>Manage Categories</h2>
+            <a th:href="@{/categories/new}">Create new category</a>
+        </div>
+        
+        <div th:if="${message != null}" class="alert alert-success text-center">
+            [[${message}]]
+        </div>
+        
+        <div th:replace="fragments :: search_form('/categories/page/1')"></div>
+        
+        <div>
+            <table class="table table-bordered table-striped table-hover table-responsive-xl">
+                <thead class="thead-dark">
+                    <tr>
+                        <th class="text-white">ID</th>
+                        <th>Category Image</th>
+                        <th th:replace="fragments :: column_link('/categories', 'name', 'Category Name')"/>
+                        <th class="text-white">Alias</th>
+                        <th class="text-white">Enabled</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="category : ${listCategories}">
+                        <td>[[${category.id}]]</td>
+                        <td>
+                        	<img th:src="@{${category.imagePath}}">
+                        </td>
+                        <td>[[${category.name}]]</td>
+                        <td>[[${category.alias}]]</td>
+                        <td>
+                        	<div th:replace="fragments :: status(${category.enabled}, 'category', '/categories/' + ${category.id})"></div>
+                        </td>
+                        <td>
+                        	<div th:replace="fragments :: edit('category', '/categories/edit/' + ${category.id})"></div>
+                        	&nbsp;
+                            <div th:replace="fragments :: delete('category', ${category.id}, '/categories/delete/' + ${category.id}, ${!category.hasChildren})"></div>
+                        </td>
+                    </tr>
+                
+                </tbody>
+            </table>
+        </div>
+        
+        <div th:if="${keyword != null}" class="text-center">
+            <span>Search result does not show categories in hierarchical form</span>
+            <div th:replace="fragments :: pagination('/categories', 'categories')"></div>
+        </div>
+        
+        <th:block th:unless="${keyword != null}">
+            <div th:replace="fragments :: pagination('/categories', 'top-level categories')"></div>
+        </th:block>
+        
+        <div th:replace="modal_fragments :: comfirm_modal"></div>
+        
+        <div th:replace="fragments :: footer"></div>
+        
+    </div>
+<script th:src="@{/js/common_list.js}"></script>
+<script type="text/javascript">
+    moduleURL = "[[@{/categories}]]"
+
+    $(document).ready(() => {
+        $(".link-delete").on('click', function(e) {
+            e.preventDefault()
+            showDeleteConfirmation($(this), 'category')
+        })
+    })
+</script>
+
+</body>
+
+</html>

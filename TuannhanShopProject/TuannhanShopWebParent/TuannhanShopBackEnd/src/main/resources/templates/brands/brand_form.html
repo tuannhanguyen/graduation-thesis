@@ -10,7 +10,7 @@
             <h2>Manage Brands | [[${pageTitle}]]</h2>
         </div>
         
-        <form th:action="@{/categories/save}" method="POST" style="max-width: 500px; margin: 0 auto;"
+        <form th:action="@{/brands/save}" method="POST" style="max-width: 500px; margin: 0 auto;"
                 enctype="multipart/form-data"
                 onsubmit="return checkUnique(this)"
                th:object="${brand}" >
@@ -19,7 +19,7 @@
                <div class="form-group row">
                     <label class="col-sm-4 col-form-label">Brand name</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" th:field="*{name}" required minlength="3" maxlength="128"/>
+                        <input type="text" class="form-control" th:field="*{name}" required minlength="2" maxlength="128"/>
                     </div>
                </div>
                 <div class="form-group row">
@@ -89,6 +89,31 @@
             
             divChosenCategories.append("<span class='badge badge-secondary m-1'>" + catName + "</span>")
         })
+    }
+    
+    function checkUnique(form) {
+    	brandId = $("#id").val()
+    	brandName = $("#name").val()
+    	
+    	csrfValue = $("input[name='_csrf']").val()
+    	
+    	url = "[[@{/brands/check_unique}]]"
+    	
+    	params = {id: brandId, name: brandName, _csrf: csrfValue}
+    	
+    	$.post(url, params, function(response) {
+    		if (response == "OK") {
+    			form.submit()
+    		} else if (response == "DuplicatedName") {
+    			showWarningModal("There is another brand having same name " + brandName)
+    		} else {
+                showErrorModal("Error server")
+            }
+    	}).fail(() => {
+            showErrorModal("Could not connect to the server")
+        })
+    	
+    	return false;
     }
     
 </script>

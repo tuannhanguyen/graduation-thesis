@@ -21,7 +21,7 @@
                     <tr>
                         <th class="text-white">Brand ID</th>
                         <th>Logo</th>
-                        <th>Brand Name</th>
+                        <th th:replace="fragments :: column_link('/brands', 'name', 'Brand Name')"></th>
                         <th>Categories</th>
                         <th></th>
                     </tr>
@@ -49,14 +49,7 @@
             </table>
         </div>
         
-        <div th:if="${keyword != null}" class="text-center">
-            <span>Search result does not show categories in hierarchical form</span>
-            <div th:replace="fragments :: pagination('/categories', 'categories')"></div>
-        </div>
-        
-        <th:block th:unless="${keyword != null}">
-            <div th:replace="fragments :: pagination('/categories', 'top-level categories')"></div>
-        </th:block>
+      	<div th:replace="fragments :: pagination('/brands', 'brands')"></div>
         
         <div th:replace="modal_fragments :: comfirm_modal"></div>
         
@@ -65,14 +58,16 @@
     </div>
 <script th:src="@{/js/common_list.js}"></script>
 <script type="text/javascript">
-    moduleURL = "[[@{/categories}]]"
+    moduleURL = "[[@{/brands}]]"
 
     $(document).ready(() => {
         $(".link-delete").on('click', function(e) {
             e.preventDefault()
-            showDeleteConfirmation($(this), 'category')
+            showDeleteConfirmation($(this), 'brand')
         })
     })
+    
+    
 </script>
 
 </body>

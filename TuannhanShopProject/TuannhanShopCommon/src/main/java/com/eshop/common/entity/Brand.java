@@ -70,7 +70,7 @@ public class Brand {
 	public String getLogoPath() {
 		if (this.id == null) return "/images/image-thumbnail.png";
 
-		return "/brands-logos/" + this.id + "/" + this.logo;
+		return "/brand-logos/" + this.id + "/" + this.logo;
 	}
 
 }
