@@ -7,11 +7,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.eshop.admin.brand.BrandService;
+import com.eshop.common.entity.Brand;
 import com.eshop.common.entity.Product;
 
 @Controller
 public class ProductController {
-	@Autowired ProductService productService;
+	@Autowired private ProductService productService;
+	@Autowired private BrandService brandService;
 	
 	@GetMapping("/products")
 	public String listAll(Model model) {
@@ -19,5 +22,21 @@ public class ProductController {
 		model.addAttribute("listProducts", listProducts);
 		
 		return "products/products";
+	}
+	
+	@GetMapping("/products/new")
+	public String newProduct(Model model) {
+		List<Brand> listBrands = brandService.listAll();
+		
+		Product product = new Product();
+		product.setEnabled(true);
+		product.setInStock(true);
+		
+		model.addAttribute("product", product);
+		model.addAttribute("listBrands", listBrands);
+		model.addAttribute("pageTitle", "Create new product");
+		
+		
+		return "products/product_form";
 	}
 }

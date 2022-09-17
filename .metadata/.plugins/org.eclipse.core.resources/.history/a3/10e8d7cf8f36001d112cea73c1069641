@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: page_head(${pageTitle})"></head>
+
+<body>
+	<div class="container-fluid">
+		<div th:replace="navigation :: menu"></div>
+		<div>
+			<h2>Manage Products | [[${pageTitle}]]</h2>
+		</div>
+
+		<form th:action="@{/products/save}" method="POST"
+			style="max-width: 500px; margin: 0 auto;" th:object="${product}">
+			<input type="hidden" th:field="*{id}">
+
+			<div>
+				<!-- Nav tabs -->
+				<ul class="nav nav-tabs" id="myTab" role="tablist">
+					<li class="nav-item"><a class="nav-link active" id="home-tab"
+						data-toggle="tab" href="#home" role="tab" aria-controls="home"
+						aria-selected="true">Overview</a></li>
+					<li class="nav-item"><a class="nav-link" id="profile-tab"
+						data-toggle="tab" href="#profile" role="tab"
+						aria-controls="profile" aria-selected="false">Description</a></li>
+					<li class="nav-item"><a class="nav-link" id="messages-tab"
+						data-toggle="tab" href="#messages" role="tab"
+						aria-controls="messages" aria-selected="false">Images</a></li>
+					<li class="nav-item"><a class="nav-link" id="settings-tab"
+						data-toggle="tab" href="#settings" role="tab"
+						aria-controls="settings" aria-selected="false">Details</a></li>
+				</ul>
+
+				<!-- Tab panes -->
+				<div class="tab-content">
+					<div class="tab-pane active" id="home" role="tabpanel"
+						aria-labelledby="home-tab">...</div>
+					<div class="tab-pane" id="profile" role="tabpanel"
+						aria-labelledby="profile-tab">...</div>
+					<div class="tab-pane" id="messages" role="tabpanel"
+						aria-labelledby="messages-tab">...</div>
+					<div class="tab-pane" id="settings" role="tabpanel"
+						aria-labelledby="settings-tab">...</div>
+				</div>
+			</div>
+		</form>
+
+		<div th:replace="modal_fragments :: modal_dialog"></div>
+
+		<div th:replace="fragments :: footer"></div>
+	</div>
+
+	<script type="text/javascript">
+		moduleURL = "[[@{/products}]]"
+	</script>
+	<script type="text/javascript" th:src="@{/js/common_form.js}"></script>
+</body>
+
+</html>

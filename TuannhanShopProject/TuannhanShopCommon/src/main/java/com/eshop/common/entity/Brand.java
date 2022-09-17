@@ -65,6 +65,14 @@ public class Brand {
 	public void setCategories(Set<Category> categories) {
 		this.categories = categories;
 	}
+	
+	public Brand() {
+	}
+
+	public Brand(Integer id, String name) {
+		this.id = id;
+		this.name = name;
+	}
 
 	@Transient
 	public String getLogoPath() {
