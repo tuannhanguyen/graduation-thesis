@@ -1,0 +1,7 @@
+package com.eshop.admin.brand;
+
+public class CategoryDTO {
+	private Integer id;
+	private String name;
+
+}
