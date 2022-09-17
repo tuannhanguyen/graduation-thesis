@@ -3,6 +3,8 @@ package com.eshop.admin.brand;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.eshop.common.entity.Brand;
 
 @Service
+@Transactional
 public class BrandService {
 	public static final int BRANDS_PER_PAGE = 10;
 	@Autowired BrandRepository brandRepository;
