@@ -240,7 +240,7 @@ public class Product {
 	public String getMainImagePath() {
 		if (id == null || mainImage == null ) return  "/images/image-thumbnail.png";
 
-		return "/products-images/" + this.id + "/" + this.mainImage ;
+		return "/product-images/" + this.id + "/" + this.mainImage ;
 	}
 
 }
