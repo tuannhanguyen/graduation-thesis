@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments :: page_head('Products')"></head>
+<head th:replace="fragments :: page_head('Products', 'none')"></head>
 <body>
     <div class="container-fluid">
         <div th:replace="navigation :: menu"></div>
@@ -70,7 +70,7 @@
     $(document).ready(() => {
         $(".link-delete").on('click', function(e) {
             e.preventDefault()
-            showDeleteConfirmation($(this), 'brand')
+            showDeleteConfirmation($(this), 'product')
         })
     })
     
