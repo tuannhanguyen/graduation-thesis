@@ -1,0 +1,65 @@
+dropDownBrands = $("#brand")
+dropDownCategories = $("#category")
+
+
+
+$(document).ready(function() {
+
+	$("#shortDescription").richText()
+	$("#fullDescription").richText()
+
+	dropDownBrands.change(function() {
+		dropDownCategories.empty()
+		getCategories()
+	})
+
+	getCategories()
+
+	$("#fileImage").change(function() {
+		fileSize = this.files[0].size
+
+		if (fileSize > 1048576) {
+			this.setCustomValidity("You must choose an image less than 1MB")
+			this.reportValidity()
+		} else {
+			this.setCustomValidity("")
+			showImageThumbnail(this);
+		}
+	})
+})
+
+function getCategories() {
+	brandID = dropDownBrands.val()
+	url = brandModuleURL + "/" + brandID + "/categories"
+
+	$.get(url, function(responseJson) {
+		$.each(responseJson, function(index, category) {
+			$("<option>").val(category.id).text(category.name).appendTo(dropDownCategories)
+		})
+	})
+}
+
+function checkUnique(form) {
+	productId = $("#id").val()
+	productName = $("#name").val()
+
+	csrfValue = $("input[name='_csrf']").val()
+
+	url = "[[@{/products/check_unique}]]"
+
+	params = { id: productId, name: productName, _csrf: csrfValue }
+
+	$.post(url, params, function(response) {
+		if (response == "OK") {
+			form.submit()
+		} else if (response == "Duplicated") {
+			showWarningModal("There is another product having same name " + productName)
+		} else {
+			showErrorModal("Error server")
+		}
+	}).fail(function() {
+		showErrorModal("Could not connect to the server")
+	})
+
+	return false;
+}
