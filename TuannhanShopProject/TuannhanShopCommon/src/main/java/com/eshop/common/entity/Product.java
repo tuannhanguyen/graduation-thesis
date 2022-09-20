@@ -1,7 +1,9 @@
 package com.eshop.common.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -71,6 +73,9 @@ public class Product {
 
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
 	private Set<ProductImage> images = new HashSet<>();
+
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+	private List<ProductDetail> details = new ArrayList<>();
 
 	public Integer getId() {
 		return id;
