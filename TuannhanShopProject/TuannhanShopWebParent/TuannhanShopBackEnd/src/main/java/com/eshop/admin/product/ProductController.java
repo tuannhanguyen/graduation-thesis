@@ -70,24 +70,24 @@ public class ProductController {
 		if (!mainImageMultipart.isEmpty()) {
 			String fileName = StringUtils.cleanPath(mainImageMultipart.getOriginalFilename());
 			String uploadDir = "../product-images/" + savedProduct.getId();
-			
+
 			FileUploadUtil.cleanDir(uploadDir);
 			FileUploadUtil.saveFile(uploadDir, fileName, mainImageMultipart);
 		}
 
 		if (extraImageMultiparts.length > 0) {
 			String uploadDir = "../product-images/" + savedProduct.getId() + "/extras";
-			
+
 			for (MultipartFile multipartFile : extraImageMultiparts) {
-				if (!multipartFile.isEmpty()) {
+				if (multipartFile.isEmpty()) {
 					continue;
 				}
-				
+
 				String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 				FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 			}
 		}
-		
+
 	}
 
 	private void setMainImageName(MultipartFile mainImageMultipart, Product product) {
@@ -123,7 +123,12 @@ public class ProductController {
 	public String delete(@PathVariable(name = "id") Integer id, Model model, RedirectAttributes re) {
 		try {
 			productService.delete(id);
-			String productImages = "../product-images/" + id + "/extras";
+			String productExtraImages = "../product-images/" + id + "/extras";
+			String productImagesDir = "../product-images/" + id;
+
+			FileUploadUtil.removeDir(productExtraImages);
+			FileUploadUtil.removeDir(productImagesDir);
+
 			re.addFlashAttribute("message", "The product ID " + id + " has been deleted successfully");
 		} catch (ProductNotFoundException e) {
 			re.addFlashAttribute("message", e.getMessage());
