@@ -56,6 +56,12 @@ public class ProductImage {
 		this.product = product;
 	}
 
+	public ProductImage(Integer id, String name, Product product) {
+		this.id = id;
+		this.name = name;
+		this.product = product;
+	}
+
 	@Transient
 	public String getImagePath() {
 		return "/product-images/" + product.getId() + "/extras/" + this.name;

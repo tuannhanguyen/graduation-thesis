@@ -34,14 +34,16 @@
                    <input type="file" name="extraImage"
                        accept="image/png, image/jpeg">
                </div>
-               <input type="hidden" name="imageIDs" th:id="'imageId' +${status.index}">
-               <input type="hidden" name="imageNames" th:id="'imageName' +${status.index}">
+               <input type="hidden" name="imageIDs" th:id="'imageId' +${status.index}"
+                        th:value="${productImage.id}">
+               <input type="hidden" name="imageNames" th:id="'imageName' +${status.index}"
+                        th:value="${productImage.name}">
            </div>
 	       </th:block>
 	       
 	       <div class="col border m-3 p-2" th:id="'divExtraImage' + ${numberOfExistingExtraImges}">
 	           <div th:id="'extraImageHeader' + ${numberOfExistingExtraImges}">
-	               <label>Extra image #[[${numberOfExistingExtraImges + 1}]]</label>
+	               <label>Extra image #[[${numberOfExistingExtraImges}+1]]</label>
 	           </div>
 	           <div class="m-2">
 	               <img th:id="'extraThumbnail' + ${numberOfExistingExtraImges}" 

@@ -68,4 +68,17 @@ public class ProductDetail {
 		this.product = product;
 	}
 
+	public ProductDetail(Integer id, String name, Product product) {
+		this.id = id;
+		this.name = name;
+		this.product = product;
+	}
+
+	public ProductDetail(Integer id, String name, String value, Product product) {
+		this.id = id;
+		this.name = name;
+		this.value = value;
+		this.product = product;
+	}
+
 }
