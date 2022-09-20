@@ -59,6 +59,9 @@ public class ProductDetail {
 		this.product = product;
 	}
 
+	public ProductDetail() {
+	}
+
 	public ProductDetail(String name, String value, Product product) {
 		this.name = name;
 		this.value = value;
