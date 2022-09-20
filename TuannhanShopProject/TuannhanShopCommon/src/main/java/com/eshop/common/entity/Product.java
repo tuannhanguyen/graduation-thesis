@@ -248,4 +248,16 @@ public class Product {
 		return "/product-images/" + this.id + "/" + this.mainImage ;
 	}
 
+	public List<ProductDetail> getDetails() {
+		return details;
+	}
+
+	public void setDetails(List<ProductDetail> details) {
+		this.details = details;
+	}
+
+	public void addDetails(String name, String value) {
+		this.details.add(new ProductDetail(name, value, this));
+	}
+
 }
