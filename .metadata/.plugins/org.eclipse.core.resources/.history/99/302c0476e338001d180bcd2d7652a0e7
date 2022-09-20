@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: page_head('Products', 'none')"></head>
+<body>
+    <div class="container-fluid">
+        <div th:replace="navigation :: menu"></div>
+        <div>
+            <h2>Manage Products</h2>
+            <a th:href="@{/products/new}">Create new product</a>
+        </div>
+        
+        <div th:if="${message != null}" class="alert alert-success text-center">
+            [[${message}]]
+        </div>
+        
+        <div th:replace="fragments :: search_form('/products/page/1')"></div>
+        
+        <div>
+            <table class="table table-bordered table-striped table-hover table-responsive-xl">
+                <thead class="thead-dark">
+                    <tr>
+                        <th class="text-white">Product ID</th>
+                        <th>Main Image</th>
+                        <th>Product name</th>
+                        <th>Brand</th>
+                        <th>Category</th>
+                        <th>Enabled</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="product : ${listProducts}">
+                        <td>[[${product.id}]]</td>
+                        <td>
+                           <img th:src="@{${product.mainImagePath}}" style="width: 120px" class="img-fluid" >
+                        </td>
+                        <td>
+                        	<a th:href="@{'/products/detail/' + ${product.id}}"
+                        		title="View details of this product">[[${product.name}]]
+                        	</a>
+                        </td>
+                        <td>[[${product.brand.name}]]</td>
+                        <td>[[${product.category.name}]]</td>
+                        <td>
+                        	<div th:replace="fragments :: status(${product.enabled}, 'product', '/products/' + ${product.id})"></div>
+                        </td>
+                        <td>
+                        	<a class="fas fa-file-alt fa-2x icon-green"
+                        		th:href="@{'/products/detail/' + ${product.id}}"
+                        		title="View details of this product">
+                        	</a>
+                        	&nbsp;
+                        	<div th:replace="fragments :: edit('product', '/products/edit/' + ${product.id})"></div>
+                        	&nbsp;
+                            <div th:replace="fragments :: delete('product', ${product.id}, '/products/delete/' + ${product.id}, true)"></div>
+                        </td>
+                    </tr>
+                
+                </tbody>
+            </table>
+        </div>
+        
+      	<div th:replace="fragments :: pagination('/brands', 'brands')"></div>
+        
+        <div th:replace="modal_fragments :: comfirm_modal"></div>
+        
+        <div th:replace="fragments :: footer"></div>
+        
+    </div>
+<script th:src="@{/js/common_list.js}"></script>
+<script type="text/javascript">
+    moduleURL = "[[@{/products}]]"
+
+    $(document).ready(() => {
+        $(".link-delete").on('click', function(e) {
+            e.preventDefault()
+            showDeleteConfirmation($(this), 'product')
+        })
+    })
+    
+    
+</script>
+
+</body>
+
+</html>
