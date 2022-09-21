@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -33,9 +35,36 @@ public class ProductController {
 	private BrandService brandService;
 
 	@GetMapping("/products")
-	public String listAll(Model model) {
-		List<Product> listProducts = productService.listAll();
+	public String listFirstPage(Model model) {
+		return listByPage(1, "name", "asc", null, model);
+	}
+
+	@GetMapping("/products/page/{pageNum}")
+	public String listByPage(@PathVariable(name = "pageNum") Integer pageNum,
+			@Param("sortField") String sortField, @Param("sortDir") String sortDir,
+			@Param("keyword") String keyword,
+			Model model) {
+		Page<Product> page = productService.listByPage(pageNum, sortField, sortDir, keyword);
+		List<Product> listProducts = page.getContent();
+
+		long startCount = (pageNum - 1) * ProductService.PRODUCT_PER_PAGE + 1;
+		long endCount = startCount + ProductService.PRODUCT_PER_PAGE - 1;
+		if (endCount > page.getTotalElements()) {
+			endCount = page.getTotalElements();
+		}
+
+		String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
+
+		model.addAttribute("totalPages", page.getTotalPages());
+		model.addAttribute("totalItems", page.getTotalElements());
+		model.addAttribute("currentPage", pageNum);
+		model.addAttribute("sortField", sortField);
+		model.addAttribute("sortDir", sortDir);
+		model.addAttribute("keyword", keyword);
+		model.addAttribute("startCount", startCount);
+		model.addAttribute("endCount", endCount);
 		model.addAttribute("listProducts", listProducts);
+		model.addAttribute("reverseSortDir", reverseSortDir);
 
 		return "products/products";
 	}
@@ -230,7 +259,7 @@ public class ProductController {
 			return "redirect:/products";
 		}
 	}
-	
+
 	@GetMapping("/products/detail/{id}")
 	public String viewProdutcDetails(@PathVariable("id") Integer id, Model model,
 			RedirectAttributes ra) {

@@ -19,11 +19,11 @@
             <table class="table table-bordered table-striped table-hover table-responsive-xl">
                 <thead class="thead-dark">
                     <tr>
-                        <th class="text-white">Product ID</th>
+                        <th th:replace="fragments :: column_link('/products', 'id', 'ID')"></th>
                         <th>Main Image</th>
-                        <th>Product name</th>
-                        <th>Brand</th>
-                        <th>Category</th>
+                        <th th:replace="fragments :: column_link('/products', 'name', 'Product name')"></th>
+                        <th th:replace="fragments :: column_link('/products', 'brand', 'Brand')"></th>
+                        <th th:replace="fragments :: column_link('/products', 'category', 'Category')"></th>
                         <th>Enabled</th>
                         <th></th>
                     </tr>
@@ -61,7 +61,7 @@
             </table>
         </div>
         
-      	<div th:replace="fragments :: pagination('/brands', 'brands')"></div>
+      	<div th:replace="fragments :: pagination('/products', 'products')"></div>
         
         <div th:replace="modal_fragments :: comfirm_modal"></div>
         
