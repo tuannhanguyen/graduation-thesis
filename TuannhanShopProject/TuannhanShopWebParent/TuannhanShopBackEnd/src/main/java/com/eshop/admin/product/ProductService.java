@@ -67,6 +67,16 @@ public class ProductService {
 		return productRepository.save(product);
 	}
 
+	public void saveProductPrice(Product productInForm) {
+		Product productInDb = productRepository.findById(productInForm.getId()).get();
+		productInDb.setCost(productInForm.getCost());
+		productInDb.setPrice(productInForm.getPrice());
+		productInDb.setDiscountPercent(productInForm.getDiscountPercent());
+
+		productRepository.save(productInDb);
+
+	}
+
 	public String checkUnique(Integer id, String  name) {
 		boolean isCreatingNew = (id == null || id == 0);
 		Product productByName = productRepository.findByName(name);
