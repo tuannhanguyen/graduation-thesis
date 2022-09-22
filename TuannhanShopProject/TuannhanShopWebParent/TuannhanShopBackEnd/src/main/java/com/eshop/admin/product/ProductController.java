@@ -89,10 +89,7 @@ public class ProductController {
 		model.addAttribute("product", product);
 		model.addAttribute("listBrands", listBrands);
 		model.addAttribute("pageTitle", "Create new product");
-
-		Integer numberOfExistingExtraImges = product.getImages().size();
-
-		model.addAttribute("numberOfExistingExtraImges", numberOfExistingExtraImges);
+		model.addAttribute("numberOfExistingExtraImges", 0);
 
 
 		return "products/product_form";
