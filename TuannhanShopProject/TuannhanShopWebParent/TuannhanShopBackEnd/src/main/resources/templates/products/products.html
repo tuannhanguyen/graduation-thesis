@@ -13,7 +13,27 @@
             [[${message}]]
         </div>
         
-        <div th:replace="fragments :: search_form('/products/page/1')"></div>
+        <div>
+            <form th:action="@{/products/page/1}" class="form-inline m-3" id="searchForm">
+            <input type="hidden" name="sortField" th:value="${sortField}" >
+            <input type="hidden" name="sortDir" th:value="${sortDir}" >
+            
+            Category:&nbsp;
+            <select class="form-control" name="categoryId" id="dropDownCategory">
+                <option value="0">All categories</option>
+                <th:block th:each="cat : ${listCategories}">
+                    <option th:value="${cat.id}" th:selected="${categoryId} == ${cat.id}">[[${cat.name}]]</option>
+                </th:block>
+            </select>
+        
+            &nbsp;Filter: &nbsp;
+            <input type="search" name="keyword" th:value="${keyword}" class="form-control" required>
+            &nbsp;&nbsp;
+            <input type="submit" value="Search" class="btn btn-primary">
+            &nbsp;&nbsp;
+            <input type="button" value="Clear" class="btn btn-secondary" onclick="clearFilter()">
+        </form>
+        </div>
         
         <div>
             <table class="table table-bordered table-striped table-hover table-responsive-xl">
@@ -90,6 +110,10 @@
         	e.preventDefault()
         	linkDetailURL = $(this).attr("href")
         	$("#detailModal").modal("show").find(".modal-content").load(linkDetailURL)
+        })
+        
+        $("#dropDownCategory").on("change", function() {
+            $("#searchForm").submit()
         })
     })
     

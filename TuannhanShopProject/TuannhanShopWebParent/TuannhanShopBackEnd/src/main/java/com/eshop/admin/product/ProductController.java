@@ -23,7 +23,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.eshop.admin.FileUploadUtil;
 import com.eshop.admin.brand.BrandService;
+import com.eshop.admin.category.CategoryService;
 import com.eshop.common.entity.Brand;
+import com.eshop.common.entity.Category;
 import com.eshop.common.entity.Product;
 import com.eshop.common.entity.ProductImage;
 
@@ -33,19 +35,23 @@ public class ProductController {
 	private ProductService productService;
 	@Autowired
 	private BrandService brandService;
+	@Autowired CategoryService categoryService;
 
 	@GetMapping("/products")
 	public String listFirstPage(Model model) {
-		return listByPage(1, "name", "asc", null, model);
+		return listByPage(1, "name", "asc", null, 0, model);
 	}
 
 	@GetMapping("/products/page/{pageNum}")
 	public String listByPage(@PathVariable(name = "pageNum") Integer pageNum,
 			@Param("sortField") String sortField, @Param("sortDir") String sortDir,
 			@Param("keyword") String keyword,
+			@Param("categoryId") Integer categoryId,
 			Model model) {
-		Page<Product> page = productService.listByPage(pageNum, sortField, sortDir, keyword);
+		Page<Product> page = productService.listByPage(pageNum, sortField, sortDir, keyword, categoryId);
 		List<Product> listProducts = page.getContent();
+
+		List<Category> listCategories = categoryService.listCategoriesUsedInForm();
 
 		long startCount = (pageNum - 1) * ProductService.PRODUCT_PER_PAGE + 1;
 		long endCount = startCount + ProductService.PRODUCT_PER_PAGE - 1;
@@ -54,6 +60,8 @@ public class ProductController {
 		}
 
 		String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
+
+		if (categoryId != null) model.addAttribute("categoryId", categoryId);
 
 		model.addAttribute("totalPages", page.getTotalPages());
 		model.addAttribute("totalItems", page.getTotalElements());
@@ -65,6 +73,7 @@ public class ProductController {
 		model.addAttribute("endCount", endCount);
 		model.addAttribute("listProducts", listProducts);
 		model.addAttribute("reverseSortDir", reverseSortDir);
+		model.addAttribute("listCategories", listCategories);
 
 		return "products/products";
 	}
