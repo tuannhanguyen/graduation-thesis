@@ -43,7 +43,7 @@
 	       
 	       <div class="col border m-3 p-2" th:id="'divExtraImage' + ${numberOfExistingExtraImges}">
 	           <div th:id="'extraImageHeader' + ${numberOfExistingExtraImges}">
-	               <label>Extra image #[[${numberOfExistingExtraImges}+1]]</label>
+	               <label>Extra image #[[${numberOfExistingExtraImges} + 1]]</label>
 	           </div>
 	           <div class="m-2">
 	               <img th:id="'extraThumbnail' + ${numberOfExistingExtraImges}" 

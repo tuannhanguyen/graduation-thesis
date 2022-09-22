@@ -81,6 +81,11 @@ public class ProductController {
 		model.addAttribute("listBrands", listBrands);
 		model.addAttribute("pageTitle", "Create new product");
 
+		Integer numberOfExistingExtraImges = product.getImages().size();
+
+		model.addAttribute("numberOfExistingExtraImges", numberOfExistingExtraImges);
+
+
 		return "products/product_form";
 	}
 
@@ -246,7 +251,13 @@ public class ProductController {
 		try {
 			Product product = productService.get(id);
 			List<Brand> listBrands = brandService.listAll();
-			Integer numberOfExistingExtraImges = product.getImages().size();
+			Integer numberOfExistingExtraImges = 0;
+
+			if (product.getImages() == null) {
+				numberOfExistingExtraImges = 0;
+			} else {
+				numberOfExistingExtraImges = product.getImages().size();
+			}
 
 			model.addAttribute("product", product);
 			model.addAttribute("listBrands", listBrands);
