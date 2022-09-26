@@ -1,0 +1,64 @@
+package com.eshop.product;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import com.eshop.admin.product.ProductService;
+import com.eshop.category.CategoryService;
+import com.eshop.common.entity.Category;
+import com.eshop.common.entity.Product;
+
+@Controller
+public class ProductController {
+
+	@Autowired ProductService productService;
+	@Autowired private CategoryService categoryService;
+
+	@GetMapping("/c/{category_alias}")
+	public String viewCategory(@PathVariable("category_alias") String alias, 
+			@PathVariable(name = "pageNum") int pageNum,
+			Model model) {
+		String alias1 = alias.trim();
+		Category category = categoryService.getCategory(alias);
+		if (category == null) {
+			return "error/404";
+		}
+		
+		List<Category> listCategoryParents = categoryService.getCategoryParents(category);
+		
+		Page<Product> pageProducts = productService.listByCategories(1, category.getId());
+		
+		long startCount = (pageNum - 1) * ProductService.PRODUCTS_PER_PAGE + 1;
+		long endCount = startCount + ProductService.PRODUCTS_PER_PAGE - 1;
+		if (endCount > page.getTotalElements()) {
+			endCount = page.getTotalElements();
+		}
+
+		String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
+
+		if (categoryId != null) model.addAttribute("categoryId", categoryId);
+
+		model.addAttribute("totalPages", page.getTotalPages());
+		model.addAttribute("totalItems", page.getTotalElements());
+		model.addAttribute("currentPage", pageNum);
+		model.addAttribute("sortField", sortField);
+		model.addAttribute("sortDir", sortDir);
+		model.addAttribute("keyword", keyword);
+		model.addAttribute("startCount", startCount);
+		model.addAttribute("endCount", endCount);
+		model.addAttribute("listProducts", listProducts);
+		model.addAttribute("reverseSortDir", reverseSortDir);
+
+		model.addAttribute("pageTitle", category.getName());
+		model.addAttribute("listCategoryParents", listCategoryParents);
+		
+		return "products_by_category";
+	}
+}
+

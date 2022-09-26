@@ -1,0 +1,5 @@
+package com.eshop.product;
+
+public class ProductService {
+
+}
