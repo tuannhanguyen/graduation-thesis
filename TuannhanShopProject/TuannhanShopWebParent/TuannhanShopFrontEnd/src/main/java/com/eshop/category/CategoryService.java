@@ -27,4 +27,8 @@ public class CategoryService {
 
 		return listNoChildrenCategories;
 	}
+
+	public Category getCategory(String alias) {
+		return categoryReposeitory.findByAliasEnabled(alias);
+	}
 }
