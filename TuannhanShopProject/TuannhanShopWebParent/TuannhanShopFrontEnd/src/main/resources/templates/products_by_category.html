@@ -29,12 +29,13 @@
         
         <div class="row text-center">
         	<th:block th:each="cat : ${category.children}">
-        	<div class="col" th:if="${cat.enabled} == true"></div>
+        	<div class="col" th:if="${cat.enabled} == true">
         		<a th:href="@{'/c/' + ${cat.alias}}">
         			<img th:src="@{${cat.imagePath}}" height="100">
         			<br/>
         			<b>[[${cat.name}]]</b>
         		</a>
+        	</div>
         	</th:block>
         </div>
         
@@ -48,6 +49,13 @@
         				<br/>
         				<b>[[${product.name}]]</b>
         			</div>
+        			<div th:if="${product.discountPercent <= 0}">
+        			     <span>$ [[${product.price}]]</span>
+        			</div>
+        			<div th:if="${product.discountPercent > 0}">
+                         <span style="font-size: large; color: darkred;">$ [[${product.discountPrice}]]</span>
+                         <del><span>$ [[${product.price}]]</span></del>
+                    </div>
         		</div>
         	</th:block>
         </div>
