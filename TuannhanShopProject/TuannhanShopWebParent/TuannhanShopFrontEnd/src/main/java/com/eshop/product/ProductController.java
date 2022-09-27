@@ -12,33 +12,34 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.eshop.category.CategoryService;
 import com.eshop.common.entity.Category;
 import com.eshop.common.entity.Product;
+import com.eshop.common.exception.ProductNotFoundException;
 
 @Controller
 public class ProductController {
 
 	@Autowired ProductService productService;
 	@Autowired private CategoryService categoryService;
-	
+
 	@GetMapping("/c/{category_alias}")
-	public String viewCategoryFirstPage(@PathVariable("category_alias") String alias, 
+	public String viewCategoryFirstPage(@PathVariable("category_alias") String alias,
 			Model model) {
 		return viewCategoryByPage(alias, 1, model);
 	}
 
 	@GetMapping("/c/{category_alias}/page/{pageNum}")
-	public String viewCategoryByPage(@PathVariable("category_alias") String alias, 
+	public String viewCategoryByPage(@PathVariable("category_alias") String alias,
 			@PathVariable(name = "pageNum") int pageNum,
 			Model model) {
 		Category category = categoryService.getCategory(alias);
 		if (category == null) {
 			return "error/404";
 		}
-		
+
 		List<Category> listCategoryParents = categoryService.getCategoryParents(category);
-		
+
 		Page<Product> pageProducts = productService.listByCategories(pageNum, category.getId());
 		List<Product> listProducts = pageProducts.getContent();
-		
+
 		long startCount = (pageNum - 1) * ProductService.PRODUCTS_PER_PAGE + 1;
 		long endCount = startCount + ProductService.PRODUCTS_PER_PAGE - 1;
 		if (endCount > pageProducts.getTotalElements()) {
@@ -54,8 +55,24 @@ public class ProductController {
 		model.addAttribute("listCategoryParents", listCategoryParents);
 		model.addAttribute("listProducts", listProducts);
 		model.addAttribute("category", category);
-		
-		return "products_by_category";
+
+		return "product/products_by_category";
+	}
+
+	@GetMapping("/p/{product_alias}")
+	public String viewProductDetail(@PathVariable("product_alias") String alias, Model model) {
+		try {
+			Product product = productService.getProduct(alias);
+			List<Category> listCategoryParents = categoryService.getCategoryParents(product.getCategory());
+
+			model.addAttribute("product", product);
+			model.addAttribute("listCategoryParents", listCategoryParents);
+			model.addAttribute("pageTitle", product.getName());
+
+			return "product/product_detail";
+		} catch (ProductNotFoundException e) {
+			return "error/404";
+		}
 	}
 }
 
