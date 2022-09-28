@@ -20,7 +20,7 @@ public class Customer {
 	private Integer id;
 
 	@Column(nullable = false, unique = true, length = 45)
-	private String emai;
+	private String email;
 
 	@Column(nullable = false, length = 64)
 	private String password;
@@ -69,12 +69,12 @@ public class Customer {
 		this.id = id;
 	}
 
-	public String getEmai() {
-		return emai;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setEmai(String emai) {
-		this.emai = emai;
+	public void setEmail(String emai) {
+		this.email = emai;
 	}
 
 	public String getPassword() {

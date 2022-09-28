@@ -14,6 +14,9 @@ import javax.persistence.Table;
 @Table(name = "countries")
 public class Country {
 
+	public Country() {
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -57,6 +60,10 @@ public class Country {
 
 	public void setStates(Set<State> states) {
 		this.states = states;
+	}
+
+	public Country(Integer id) {
+		this.id = id;
 	}
 
 }

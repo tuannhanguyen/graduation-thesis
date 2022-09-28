@@ -1,0 +1,13 @@
+package com.eshop.customer;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.eshop.setting.CountryRepository;
+
+@Service
+public class CustomerService {
+	
+	@Autowired private CountryRepository countryRepository;
+
+}
