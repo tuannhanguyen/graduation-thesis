@@ -10,6 +10,7 @@ import com.eshop.common.entity.Customer;
 public class CustomerUserDetails implements UserDetails {
 	
 	private Customer customer;
+	private String fullName;
 
 	public CustomerUserDetails(Customer customer) {
 		this.customer = customer;
@@ -53,5 +54,16 @@ public class CustomerUserDetails implements UserDetails {
 	public String getFullName() {
 		return customer.getFirstName() + " " + customer.getLastName();
 	}
+	
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
 
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
 }

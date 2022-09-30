@@ -46,4 +46,19 @@ public class CustomerService {
 
 	}
 
+	public Customer getCustomerByEmail(String email) {
+		return customerRepository.findByEmail(email);
+	}
+	
+	public void updateCustomer(Customer customerInForm) {
+		Customer customerInDB = customerRepository.findById(customerInForm.getId()).get();
+		customerInForm.setCreatedTime(customerInDB.getCreatedTime());
+		if (customerInForm.getPassword().isEmpty()) {
+			customerInForm.setPassword(customerInDB.getPassword());
+		} else {
+			encodePassword(customerInForm);
+		}
+		customerRepository.save(customerInForm);
+	}
+
 }
