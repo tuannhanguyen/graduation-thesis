@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value=""/>
+		<item key="selection" value="!#authorization.expression(&apos;hasAuthority(&apos;&apos;Admin&apos;&apos;)&apos;) &amp;&amp; !#authorization.expression(&apos;hasAuthority(&apos;&apos;Editor&apos;&apos;)&apos;)"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="#authorization.expression(&apos;hasAuthority(&apos;&apos;Admin&apos;&apos;)&apos;) &amp;&amp; #authorization.expression(&apos;hasAuthority(&apos;&apos;Editor&apos;&apos;)&apos;)"/>
+			<item value="sec:authorize"/>
+			<item value="descript"/>
+			<item value="detailModal"/>
+			<item value="modal-content"/>
+			<item value="link-detail"/>
 			<item value="userEmail"/>
 			<item value="listStates"/>
-			<item value="state"/>
-			<item value="confirmPassword"/>
-			<item value="Email"/>
-			<item value="email"/>
-			<item value="all"/>
-			<item value="user"/>
 		</list>
 		<list key="replacehistory">
+			<item value="!#authorization.expression(&apos;hasAuthority(&apos;&apos;Admin&apos;&apos;)&apos;) &amp;&amp; !#authorization.expression(&apos;hasAuthority(&apos;&apos;Editor&apos;&apos;)&apos;)"/>
 		</list>
 	</section>
 </section>

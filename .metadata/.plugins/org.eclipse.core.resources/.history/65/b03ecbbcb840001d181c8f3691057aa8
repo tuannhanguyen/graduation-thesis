@@ -1,0 +1,5 @@
+package com.eshop.customer.security;
+
+public class CustomerUserDetails {
+
+}
