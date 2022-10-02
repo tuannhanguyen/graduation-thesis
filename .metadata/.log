@@ -4011,3 +4011,31 @@ This warning can be switched off on the Team > Git > Confirmations and Warnings 
 
 !ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2022-10-02 10:09:13.099
 !MESSAGE executing callback sts4.classpath.TkPZafGB SUCCESS [done]
+
+!ENTRY org.eclipse.m2e.logback.appender 4 0 2022-10-02 21:35:17.422
+!MESSAGE Can't save classpath container state for TuannhanShopFrontEnd
+!STACK 0
+java.io.FileNotFoundException: D:\e-shop\.metadata\.plugins\org.eclipse.m2e.jdt\TuannhanShopFrontEnd.container (The requested operation cannot be performed on a file with a user-mapped section open)
+	at java.base/java.io.FileOutputStream.open0(Native Method)
+	at java.base/java.io.FileOutputStream.open(FileOutputStream.java:291)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:234)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:184)
+	at org.eclipse.m2e.jdt.internal.BuildPathManager.saveContainerState(BuildPathManager.java:221)
+	at org.eclipse.m2e.jdt.internal.BuildPathManager.updateClasspath(BuildPathManager.java:210)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.updateClasspath(DownloadSourcesJob.java:207)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.run(DownloadSourcesJob.java:185)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY org.eclipse.m2e.logback.appender 4 0 2022-10-02 21:39:02.083
+!MESSAGE Can't save classpath container state for TuannhanShopFrontEnd
+!STACK 0
+java.io.FileNotFoundException: D:\e-shop\.metadata\.plugins\org.eclipse.m2e.jdt\TuannhanShopFrontEnd.container (The requested operation cannot be performed on a file with a user-mapped section open)
+	at java.base/java.io.FileOutputStream.open0(Native Method)
+	at java.base/java.io.FileOutputStream.open(FileOutputStream.java:291)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:234)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:184)
+	at org.eclipse.m2e.jdt.internal.BuildPathManager.saveContainerState(BuildPathManager.java:221)
+	at org.eclipse.m2e.jdt.internal.BuildPathManager.updateClasspath(BuildPathManager.java:210)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.updateClasspath(DownloadSourcesJob.java:207)
+	at org.eclipse.m2e.jdt.internal.DownloadSourcesJob.run(DownloadSourcesJob.java:185)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
