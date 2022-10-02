@@ -1,0 +1,5 @@
+package com.eshop.shoppingcart;
+
+public class CartItemRepository {
+
+}
