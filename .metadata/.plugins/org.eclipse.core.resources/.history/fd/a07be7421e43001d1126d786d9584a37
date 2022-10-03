@@ -1,0 +1,36 @@
+package com.eshop.shoppingcart;
+
+@Controller
+public class ShoppingCartController {
+
+	@Autowired ShoppingCartService shoppingCartService;
+	@Autowired private CustomerService customerService;
+	
+	@GetMapping("/cart")
+	public String viewShoppingCart(Model model, HttpServletRequest request) throws CustomerNotFoundException {
+		
+		//authenticated Customer
+		Customer customer = getAuthenticatedCustomer(request);
+		List<CartItem> listCartItems = shoppingCartService.listCartItems(customer);
+		
+		model.addAttribute("listCartItems", listCartItems);
+		
+		float estimatedTotal = 0.0F;
+		for(CartItem item : listCartItems) {
+			estimatedTotal += item.getSubTotal();
+		}
+		model.addAttribute("estimatedTotal", estimatedTotal);
+		return "cart/shopping_cart";
+	}
+	
+	private Customer getAuthenticatedCustomer(HttpServletRequest request) throws CustomerNotFoundException {
+		String email = Utility.getEmailOrAuthenticatedCustomer(request);
+		if (email == null) {
+			throw new CustomerNotFoundException("No Authenticated customer");
+		}
+		
+		return customerService.getCustomerByEmail(email);
+	}
+	
+	
+}

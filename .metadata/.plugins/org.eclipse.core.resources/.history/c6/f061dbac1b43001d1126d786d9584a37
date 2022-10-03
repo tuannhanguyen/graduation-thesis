@@ -1,0 +1,14 @@
+$(document).ready(function(){
+	
+	
+	$("#btnAddToCart").click(function(){
+		addToCart();
+	})
+});
+
+function addToCart(){
+	quantity = $("#quantity" + productId).val();
+	url = contextPath + "cart/add/" + productId + "/" + quantity;
+	alert(url)
+	
+}

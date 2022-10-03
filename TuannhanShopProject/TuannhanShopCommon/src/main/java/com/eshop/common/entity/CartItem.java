@@ -1,6 +1,5 @@
 package com.eshop.common.entity;
 
-import javax.annotation.Generated;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -8,8 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
-import org.hibernate.annotations.ManyToAny;
 
 @Entity
 @Table(name = "cart_items")
@@ -51,6 +50,11 @@ public class CartItem {
 	}
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
+	}
+	
+	@Transient
+	public float getSubTotal() {
+		return product.getDiscountPrice() * quantity;
 	}
 	
 }

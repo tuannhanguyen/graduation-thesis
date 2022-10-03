@@ -1,6 +1,5 @@
 package com.eshop.common.entity;
 
-import java.beans.Transient;
 import java.util.Date;
 
 import javax.persistence.Column;

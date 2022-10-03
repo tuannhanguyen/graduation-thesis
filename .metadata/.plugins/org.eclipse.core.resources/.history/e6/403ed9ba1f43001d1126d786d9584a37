@@ -1,0 +1,136 @@
+$(document).ready(function(){
+	decimalSeperator = ','
+	thousandsSeperator ','
+	decimalDegits = decimalDegits;
+	
+	minusControl = $(".link-Minus");
+	plusControl = $(".link-Plus");
+	
+	minusControl.click(function(e){
+		e.preventDefault($(this));
+		decreaseQuantity($(this));
+	});
+	
+	plusControl.click(function(e){
+		e.preventDefault($(this));
+		increaseQuantity($(this));
+	});
+	
+	$(".linkRemove").click(function(e){
+		e.preventDefault($(this));
+		removeProduct($(this));
+	})
+	
+});
+
+function increaseQuantity(link){
+	productId = link.attr("pid");
+	quantityInput = $("#quantity" + productId);
+	newQuantity = parseInt(quantityInput.val()) + 1;
+	
+	if(newQuantity <= 5){
+		quantityInput.val(newQuantity);
+		updateQuantity(productId, newQuantity);
+	} else{
+		showWarningModal("Maximum quantity is 5");			
+	}
+}
+
+function decreaseQuantity(link){
+	productId = link.attr("pid");
+	quantityInput = $("#quantity" + productId);
+	newQuantity = parseInt(quantityInput.val()) - 1;
+	
+	if(newQuantity > 0){
+		quantityInput.val(newQuantity);
+		updateQuantity(productId, newQuantity);
+	} else{
+		showWarningModal("Minimum quantity is 1");
+	}
+}
+
+function updateQuantity(productId, quantity){
+	url = contextPath + "cart/update/" + productId + "/" + quantity;
+	
+	$.ajax({
+		type: "POST",
+		url: url,
+		beforeSend: function(xhr){
+			xhr.setRequestHeader(csrfHeaderName, csrfValue);
+		}
+	}).done(function(res){
+		updateSubTotal(productId, res);
+		updateEstimatedTotal();
+	}).fail(function(){
+		showWarningModal("Error");
+	})
+}
+
+function updateSubTotal(productId, newSubTotal){
+	$("#subTotal" + productId).text(formatCurrency(newSubTotal));
+}
+
+function updateEstimatedTotal(){
+	estimatedTotal = 0.0;
+	productCount = 0;
+	$("span[id^='subTotal']").each(function(index, element){
+		estimatedTotal += parseFloat(clearCurrencyFormat(element.innerHTML));
+		productCount++;
+		console.log(element.innerHTML.replaceAll(",", ""));
+	})
+	
+	if(productCount < 1){
+		showEmptyCart();
+	} else{
+		$("#estimatedTotal").text(formatCurrency(estimatedTotal));		
+	}
+}
+
+function showEmptyCart(){
+	$("#sectionTotal").hide();
+	$("#sectionEmptyCartMessage").removeClass("d-none");
+}
+
+function removeProduct(link){
+	url = link.attr("href");
+	productId = link.attr("pid");
+	
+	$.ajax({
+		url: url,
+		type: "DELETE",
+		beforeSend: function(xhr){
+			xhr.setRequestHeader(csrfHeaderName, csrfValue);
+		}
+	}).done(function(res){
+		$("#div" + productId).remove();
+		rowNumber = link.attr("rowNumber");
+		removeProductHTML(rowNumber);
+		updateEstimatedTotal();
+		updatecountNumber();
+		
+		showModalDialog("Shopping Cart", res);
+	}).fail(function(){
+		showWarningModal("Error while removing product");
+	});
+}
+
+function removeProductHTML(rowNumber){
+	$("#row" + rowNumber).remove();
+	$("#blankLine" + rowNumber).remove();
+}
+
+function updatecountNumber(){
+	$(".countNumber").each(function(index, element){
+		//element.innerHTML = "" + (index+1);
+		$(this).text(index+1);
+	})
+}
+
+function formatCurrency(amount){
+	return $.number(amount, decimalDegits, decimalSeperator, thousandsSeperator);
+}
+
+function clearCurrencyFormat(numberString){
+	result = numberString.replaceAll(thousandsSeperator, "");
+	return result.replaceAll(decimalSeperator, ".");
+}
