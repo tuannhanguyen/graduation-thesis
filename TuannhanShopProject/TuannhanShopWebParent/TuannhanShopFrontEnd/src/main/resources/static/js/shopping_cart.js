@@ -1,136 +1,132 @@
-$(document).ready(function(){
-	decimalSeperator = '.';
-	thousandsSeperator = '.';
-	decimalDegits = 2;
-	
-	minusControl = $(".link-Minus");
-	plusControl = $(".link-Plus");
-	
-	minusControl.click(function(e){
-		e.preventDefault($(this));
+decimalSeparator = ','
+thousandsSeparator = '.'
+decimalDigits = 1
+
+$(document).ready(function() {
+	$(".linkMinus").on("click", function(evt) {
+		evt.preventDefault();
 		decreaseQuantity($(this));
 	});
 	
-	plusControl.click(function(e){
-		e.preventDefault($(this));
+	$(".linkPlus").on("click", function(evt) {
+		evt.preventDefault();
 		increaseQuantity($(this));
 	});
 	
-	$(".linkRemove").click(function(e){
-		e.preventDefault($(this));
+	$(".linkRemove").on("click", function(evt) {
+		evt.preventDefault();
 		removeProduct($(this));
-	})
-	
+	});		
 });
 
-function increaseQuantity(link){
-	productId = link.attr("pid");
-	quantityInput = $("#quantity" + productId);
-	newQuantity = parseInt(quantityInput.val()) + 1;
-	
-	if(newQuantity <= 5){
-		quantityInput.val(newQuantity);
-		updateQuantity(productId, newQuantity);
-	} else{
-		showWarningModal("Maximum quantity is 5");			
-	}
-}
-
-function decreaseQuantity(link){
+function decreaseQuantity(link) {
 	productId = link.attr("pid");
 	quantityInput = $("#quantity" + productId);
 	newQuantity = parseInt(quantityInput.val()) - 1;
 	
-	if(newQuantity > 0){
+	if (newQuantity > 0) {
 		quantityInput.val(newQuantity);
 		updateQuantity(productId, newQuantity);
-	} else{
-		showWarningModal("Minimum quantity is 1");
-	}
+	} else {
+		showWarningModal('Minimum quantity is 1');
+	}	
 }
 
-function updateQuantity(productId, quantity){
+function increaseQuantity(link) {
+		productId = link.attr("pid");
+		quantityInput = $("#quantity" + productId);
+		newQuantity = parseInt(quantityInput.val()) + 1;
+		
+		if (newQuantity <= 5) {
+			quantityInput.val(newQuantity);
+			updateQuantity(productId, newQuantity);
+		} else {
+			showWarningModal('Maximum quantity is 5');
+		}	
+}
+
+function updateQuantity(productId, quantity) {
 	url = contextPath + "cart/update/" + productId + "/" + quantity;
 	
 	$.ajax({
 		type: "POST",
 		url: url,
-		beforeSend: function(xhr){
+		beforeSend: function(xhr) {
 			xhr.setRequestHeader(csrfHeaderName, csrfValue);
 		}
-	}).done(function(res){
-		updateSubTotal(productId, res);
-		updateEstimatedTotal();
-	}).fail(function(){
-		showWarningModal("Error");
-	})
+	}).done(function(updatedSubtotal) {
+		updateSubtotal(updatedSubtotal, productId);
+		updateTotal();
+	}).fail(function() {
+		showErrorModal("Error while updating product quantity.");
+	});	
 }
 
-function updateSubTotal(productId, newSubTotal){
-	$("#subTotal" + productId).text(formatCurrency(newSubTotal));
+function updateSubtotal(updatedSubtotal, productId) {
+	$("#subtotal" + productId).text(formatCurrency(updatedSubtotal));
 }
 
-function updateEstimatedTotal(){
-	estimatedTotal = 0.0;
+function updateTotal() {
+	total = 0.0;
 	productCount = 0;
-	$("span[id^='subTotal']").each(function(index, element){
-		estimatedTotal += parseFloat(clearCurrencyFormat(element.innerHTML));
-		productCount++;
-		console.log(element.innerHTML.replaceAll(",", ""));
-	})
 	
-	if(productCount < 1){
-		showEmptyCart();
-	} else{
-		$("#estimatedTotal").text(formatCurrency(estimatedTotal));		
+	$(".subtotal").each(function(index, element) {
+		productCount++;
+		total += parseFloat(clearCurrencyFormat(element.innerHTML));
+	});
+	
+	if (productCount < 1) {
+		showEmptyShoppingCart();
+	} else {
+		$("#total").text(formatCurrency(total));		
 	}
+	
 }
 
-function showEmptyCart(){
+function showEmptyShoppingCart() {
 	$("#sectionTotal").hide();
 	$("#sectionEmptyCartMessage").removeClass("d-none");
 }
 
-function removeProduct(link){
+function removeProduct(link) {
 	url = link.attr("href");
-	productId = link.attr("pid");
-	
+
 	$.ajax({
-		url: url,
 		type: "DELETE",
-		beforeSend: function(xhr){
+		url: url,
+		beforeSend: function(xhr) {
 			xhr.setRequestHeader(csrfHeaderName, csrfValue);
 		}
-	}).done(function(res){
-		$("#div" + productId).remove();
+	}).done(function(response) {
 		rowNumber = link.attr("rowNumber");
 		removeProductHTML(rowNumber);
-		updateEstimatedTotal();
-		updatecountNumber();
+		updateTotal();
+		updateCountNumbers();
 		
-		showModalDialog("Shopping Cart", res);
-	}).fail(function(){
-		showWarningModal("Error while removing product");
-	});
+		showModalDialog("Shopping Cart", response);
+		
+	}).fail(function() {
+		showErrorModal("Error while removing product.");
+	});				
 }
 
-function removeProductHTML(rowNumber){
+function removeProductHTML(rowNumber) {
 	$("#row" + rowNumber).remove();
 	$("#blankLine" + rowNumber).remove();
 }
 
-function updatecountNumber(){
-	$(".countNumber").each(function(index, element){
-		//element.innerHTML = "" + (index+1);
-		$(this).text(index+1);
-	})
+function updateCountNumbers() {
+	$(".divCount").each(function(index, element) {
+		element.innerHTML = "" + (index + 1);
+	}); 
 }
 
-function formatCurrency(amount){
-	return $.number(amount, decimalDegits, decimalSeperator, thousandsSeperator);
+
+function formatCurrency(amount) {
+	return $.number(amount, decimalDigits, decimalSeparator, thousandsSeparator);
 }
 
-function clearCurrencyFormat(numberString){
-	result = numberString.replaceAll(thousandsSeperator, "");
-	return result.replaceAll(decimalSeperator, ".");
+function clearCurrencyFormat(numberString) {
+	result = numberString.replaceAll(thousandsSeparator, "");
+	return result.replaceAll(decimalSeparator, ".");
 }
