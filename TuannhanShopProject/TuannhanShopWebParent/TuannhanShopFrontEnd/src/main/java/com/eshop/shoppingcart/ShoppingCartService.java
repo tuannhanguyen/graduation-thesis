@@ -49,7 +49,7 @@ public class ShoppingCartService {
 	}
 
 	public float updateQuantity(Integer productId, Integer quantity, Customer customer) {
-		cartRepo.updateQuantity(customer.getId(), productId, quantity);
+		cartRepo.updateQuantity(quantity, customer.getId(), productId);
 		Product product = productRepository.findById(productId).get();
 		float subTotal = product.getDiscountPrice() * quantity;
 

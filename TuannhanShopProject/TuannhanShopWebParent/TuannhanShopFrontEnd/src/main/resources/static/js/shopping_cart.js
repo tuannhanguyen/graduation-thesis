@@ -47,6 +47,8 @@ function increaseQuantity(link) {
 
 function updateQuantity(productId, quantity) {
 	url = contextPath + "cart/update/" + productId + "/" + quantity;
+	console.log("productId: " + productId)
+	console.log("quantity: " + quantity)
 	
 	$.ajax({
 		type: "POST",
@@ -64,6 +66,7 @@ function updateQuantity(productId, quantity) {
 
 function updateSubtotal(updatedSubtotal, productId) {
 	$("#subtotal" + productId).text(formatCurrency(updatedSubtotal));
+	console.log("updatedSubtotal: " + updatedSubtotal);
 }
 
 function updateTotal() {

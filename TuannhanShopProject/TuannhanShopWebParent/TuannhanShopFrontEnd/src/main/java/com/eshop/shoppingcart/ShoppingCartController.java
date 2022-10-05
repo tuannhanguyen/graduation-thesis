@@ -35,6 +35,7 @@ public class ShoppingCartController {
 			estimatedTotal += item.getSubTotal();
 		}
 		model.addAttribute("estimatedTotal", estimatedTotal);
+		
 		return "cart/shopping_cart";
 	}
 	
