@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: page_head('Shipping Rates - Shopme Admin', 'none')" />
+<body>
+<div class="container-fluid">
+	<div th:replace="navigation :: menu"></div>
+	<div>
+		<h2>Manage Shipping Rates</h2>	
+		
+		<a th:href="@{/shipping_rates/new}" class="fas fa-folder-plus fa-2x icon-dark mr-2"></a>
+	</div>
+		
+	
+	<div class="full-details">
+		<table class="table table-bordered table-striped table-hover table-responsive-xl">
+			<thead class="thead-dark">
+				<tr>
+					<th th:replace="fragments :: column_link('/shipping_rates', 'id', 'ID')" />
+					<th th:replace="fragments :: column_link('/shipping_rates', 'country', 'Country')" />
+					<th th:replace="fragments :: column_link('/shipping_rates', 'state', 'State')" />
+					<th th:replace="fragments :: column_link('/shipping_rates', 'rate', 'Rate')" />
+					<th th:replace="fragments :: column_link('/shipping_rates', 'days', 'Days')" />
+					<th th:replace="fragments :: column_link('/shipping_rates', 'codSupported', 'COD Supported')" />
+					
+					<th></th>
+				</tr>								
+			</thead>
+			<tbody>
+				<tr th:each="rate : ${shippingRates}">
+					<td>[[${rate.id}]]</td>
+					<td>[[${rate.country.name}]]</td>
+					<td>[[${rate.state}]]</td>
+					<td>[[${rate.rate}]]</td>
+					<td>[[${rate.days}]]</td>
+					<td>
+						<div th:replace="shipping_rates/shipping_rates_fragment :: cod_support" />
+					</td>
+					<td>
+						<div th:replace="fragments :: edit('shipping rate', '/shipping_rates/edit/' + ${rate.id})" />
+						&nbsp; 
+						<div th:replace="fragments :: delete('shipping rate', ${rate.id}, '/shipping_rates/delete/' + ${rate.id}, true)" />						
+					</td>					
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+	
+	<div th:replace="fragments :: pagination('shipping rates', 'shippingrates')"></div>
+	<div th:replace="modal_fragments :: comfirm_modal" />
+	<div th:replace="fragments :: footer"></div>
+	
+</div>
+	
+<script th:src="@{/js/common_list.js}"></script>
+<script type="text/javascript">
+	moduleURL = "[[@{/shipping_rates}]]";
+
+	$(document).ready(function() {
+		$(".link-delete").on("click", function(e) {
+			e.preventDefault();
+			showDeleteConfirmation($(this), 'shipping rate');
+		});
+	});
+</script>
+</body>
+</html>

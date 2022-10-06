@@ -71,6 +71,7 @@
     </div>
 <script th:src="@{/js/common_list.js}"></script>
 <script type="text/javascript">
+	moduleURL = "[[@{/customers}]]"
     $(document).ready(() => {
         $(".link-delete").on('click', function(e) {
             e.preventDefault()
