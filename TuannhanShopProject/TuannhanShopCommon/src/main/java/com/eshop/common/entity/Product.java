@@ -86,6 +86,10 @@ public class Product {
 		this.id = productId;
 	}
 
+	public Product(String productName) {
+		this.name = productName;
+	}
+
 	public Integer getId() {
 		return id;
 	}
