@@ -55,8 +55,8 @@ public class ProductController {
 
 		List<Category> listCategories = categoryService.listCategoriesUsedInForm();
 
-		long startCount = (pageNum - 1) * ProductService.PRODUCT_PER_PAGE + 1;
-		long endCount = startCount + ProductService.PRODUCT_PER_PAGE - 1;
+		long startCount = (pageNum - 1) * ProductService.PRODUCTS_PER_PAGE + 1;
+		long endCount = startCount + ProductService.PRODUCTS_PER_PAGE - 1;
 		if (endCount > page.getTotalElements()) {
 			endCount = page.getTotalElements();
 		}

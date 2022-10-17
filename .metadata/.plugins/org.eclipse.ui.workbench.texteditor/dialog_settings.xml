@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="Password"/>
+		<item key="selection" value=""/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
-			<item value="add"/>
-			<item value="ShopmeAdminSmall.png"/>
-			<item value="#authorization.expression(&apos;hasAuthority(&apos;&apos;Admin&apos;&apos;)&apos;) &amp;&amp; #authorization.expression(&apos;hasAuthority(&apos;&apos;Editor&apos;&apos;)&apos;)"/>
-			<item value="sec:authorize"/>
-			<item value="descript"/>
-			<item value="detailModal"/>
-			<item value="modal-content"/>
-			<item value="link-detail"/>
+			<item value="You have not chosen any products"/>
+			<item value="confirm_modal"/>
+			<item value="delete("/>
+			<item value="codSupported"/>
+			<item value="addAttribute"/>
+			<item value="updateQuantity"/>
+			<item value="linkPlus"/>
+			<item value="cart/update"/>
 		</list>
 		<list key="replacehistory">
+			<item value="&apos;POINT&apos;"/>
+			<item value="&apos;COMMA&apos;"/>
 			<item value="!#authorization.expression(&apos;hasAuthority(&apos;&apos;Admin&apos;&apos;)&apos;) &amp;&amp; !#authorization.expression(&apos;hasAuthority(&apos;&apos;Editor&apos;&apos;)&apos;)"/>
 		</list>
 	</section>

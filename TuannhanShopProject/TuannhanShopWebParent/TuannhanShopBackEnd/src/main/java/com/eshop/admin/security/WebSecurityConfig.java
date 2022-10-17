@@ -41,22 +41,33 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests()
-			.antMatchers("/users/**").hasAuthority("Admin")
-			.antMatchers("/categories/**", "/brands/**").hasAnyAuthority("Admin", "Editor")
+		http.authorizeRequests()
+		.antMatchers("/states/list_by_country/**").hasAnyAuthority("Admin", "Salesperson")
+		.antMatchers("/users/**", "/settings/**", "/countries/**", "/states/**").hasAuthority("Admin")
+		.antMatchers("/categories/**", "/brands/**").hasAnyAuthority("Admin", "Editor")
+		
+		.antMatchers("/products/new", "/products/delete/**").hasAnyAuthority("Admin", "Editor")
+		
+		.antMatchers("/products/edit/**", "/products/save", "/products/check_unique")
+			.hasAnyAuthority("Admin", "Editor", "Salesperson")
+			
+		.antMatchers("/products", "/products/", "/products/detail/**", "/products/page/**")
+			.hasAnyAuthority("Admin", "Editor", "Salesperson", "Shipper")
+			
+		.antMatchers("/products/**").hasAnyAuthority("Admin", "Editor")
+		
+		.antMatchers("/orders", "/orders/", "/orders/page/**", "/orders/detail/**").hasAnyAuthority("Admin", "Salesperson", "Shipper")
+		
+		.antMatchers("/products/detail/**", "/customers/detail/**").hasAnyAuthority("Admin", "Editor", "Salesperson", "Assistant")
 
-			.antMatchers("/products/new", "/products/delete/**").hasAnyAuthority("Admin", "Editor")
-
-			.antMatchers("/products/edit/**", "/products/save", "/products/check_unique")
-				.hasAnyAuthority("Admin", "Editor", "Salesperson")
-
-			.antMatchers("/products", "/products/detail/**", "/products/page/**")
-				.hasAnyAuthority("Admin", "Editor", "Salesperson", "Shipper")
-
-			.antMatchers("/products/**").hasAnyAuthority("Admin", "Editor")
-
-			.anyRequest().authenticated()
-			.and()
+		.antMatchers("/customers/**", "/orders/**", "/get_shipping_cost", "/reports/**").hasAnyAuthority("Admin", "Salesperson")
+		
+		.antMatchers("/orders_shipper/update/**").hasAuthority("Shipper")
+		
+		.antMatchers("/reviews/**").hasAnyAuthority("Admin", "Assistant")
+		
+		.anyRequest().authenticated()
+		.and()
 			.formLogin()
 				.loginPage("/login")
 				.usernameParameter("email")

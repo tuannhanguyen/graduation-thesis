@@ -13,12 +13,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.eshop.admin.paging.PagingAndSortingHelper;
 import com.eshop.common.entity.Product;
 
 @Service
 @Transactional
 public class ProductService {
-	public static final int PRODUCT_PER_PAGE = 5;
+	public static final int PRODUCTS_PER_PAGE = 5;
 
 	@Autowired ProductRepository productRepository;
 
@@ -32,7 +33,7 @@ public class ProductService {
 
 		sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
 
-		Pageable pageable = PageRequest.of(pageNum - 1, PRODUCT_PER_PAGE, sort);
+		Pageable pageable = PageRequest.of(pageNum - 1, PRODUCTS_PER_PAGE, sort);
 
 		if (keyword != null && !keyword.isEmpty()) {
 			if (categoryId != null && categoryId > 0) {
@@ -113,6 +114,13 @@ public class ProductService {
 		} catch (NoSuchElementException e) {
 			throw new ProductNotFoundException("Could not find any product with ID " + id);
 		}
+	}
+	
+	public void searchProducts(int pageNum, PagingAndSortingHelper helper) {
+		Pageable pageable = helper.createPageable(PRODUCTS_PER_PAGE, pageNum);
+		String keyword = helper.getKeyword();		
+		Page<Product> page = productRepository.searchProductsByName(keyword, pageable);		
+		helper.updateModelAttributes(pageNum, page);
 	}
 
 }
