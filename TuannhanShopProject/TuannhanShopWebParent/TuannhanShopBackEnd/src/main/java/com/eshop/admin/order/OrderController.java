@@ -54,8 +54,6 @@ public class OrderController {
 		Page<Order> page = orderService.listByPage(pageNum, "orderTime", "asc", null);
 		List<Order> listOrders = page.getContent();
 		
-		System.out.println("SIZE: " + listOrders.size());
-
 		long startCount = (pageNum - 1) * OrderService.ORDERS_PER_PAGE + 1;
 		long endCount = startCount + OrderService.ORDERS_PER_PAGE - 1;
 		if (endCount > page.getTotalElements()) {

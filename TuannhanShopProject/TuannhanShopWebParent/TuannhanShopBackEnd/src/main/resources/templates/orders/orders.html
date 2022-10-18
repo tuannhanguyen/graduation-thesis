@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments :: page_head('Orders - Shopme Admin', 'none')" />
+<head th:replace="fragments :: page_head('Orders', 'none')" />
 <body>
 <div class="container-fluid">
 	<div th:replace="navigation :: menu"></div>
@@ -8,7 +8,7 @@
 		<h2>Manage Orders</h2>	
 	</div>
 		
-	<div th:replace="fragments :: search_form_and_message" />
+	<div th:replace="fragments :: search_form_and_message"></div>
 	
 	<div>
 		<table class="table table-bordered table-striped table-hover table-responsive-xl">
@@ -38,7 +38,7 @@
 				<tr th:each="order : ${listOrders}">
 					<td>[[${order.id}]]</td>
 					<td>
-						<a class="linkCustomerDetail" th:href="@{'/customers/detail/' + ${order.customer.id}}">
+						<a class="linkCustomerDetail" th:href="@{'/customers/details/' + ${order.customer.id}}">
 						[[${order.customer.fullName}]]
 						</a>
 					</td>
@@ -48,9 +48,9 @@
 					<td>
 						<div th:replace="fragments :: format_time(${order.orderTime})"></div>
 					</td>
-					<td class="hideable-column">[[${order.destination}]]</td>
-					<td class="hideable-column">[[${order.paymentMethod}]]</td>
-					<td class="hideable-column">[[${order.status}]]</td>
+					<td>[[${order.destination}]]</td>
+					<td>[[${order.paymentMethod}]]</td>
+					<td>[[${order.status}]]</td>
 
 					<td>
 						<a class="fas fa-file-alt fa-2x icon-green linkOrderDetail"
@@ -58,9 +58,9 @@
 							title="View details of this order"
 							></a>					
 						&nbsp; 
-						<div th:replace="fragments :: edit('order', '/orders/edit/' + ${order.id})" />
+						<div th:replace="fragments :: edit('order', '/orders/edit/' + ${order.id})"></div>
 						&nbsp; 
-						<div th:replace="fragments :: delete('order', ${order.id}, '/orders/delete/' + ${order.id}, true)" />						
+						<div th:replace="fragments :: delete('order', ${order.id}, '/orders/delete/' + ${order.id}, true)" ></div>						
 					</td>
 				</tr>
 			</tbody>
@@ -72,8 +72,9 @@
 	<div th:replace="modal_fragments :: comfirm_modal"></div>
 	
 	<div class="modal fade" id="customerDetailModal">
-		<div class="modal-dialog modal-lg">
+		<div class="modal-dialog modal-xl">
 			<div class="modal-content">
+			
 			</div>
 		</div>
 	</div>
@@ -81,11 +82,10 @@
 	<div class="modal fade" id="orderDetailModal">
 		<div class="modal-dialog modal-xl">
 			<div class="modal-content">
+			
 			</div>
 		</div>
 	</div>
-	
-	
 		
 	<div th:replace="fragments :: footer"></div>
 	
@@ -103,7 +103,7 @@
 	function handleLinkDeleteOrder() {
 		$(".link-delete").on("click", function(e) {
 			e.preventDefault();
-			showDeleteConfirmModal($(this), 'order');
+			showDeleteConfirmation($(this), 'order');
 		});		
 	}
 	

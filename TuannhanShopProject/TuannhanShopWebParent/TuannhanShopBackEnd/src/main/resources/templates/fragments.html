@@ -152,11 +152,11 @@
 	</div>
 	
 	<div th:fragment="currency_input(amount)" th:remove="tag">
-		<input type="text" readonly class="form-control" th:value="${#numbers.formatDecimal(amount, 1, 'POINT' 1, 'COMMA' + '$'}">
+		<input type="text" readonly class="form-control" th:value="${#numbers.formatDecimal(amount, 1, 'POINT', 1, 'COMMA') }">
 	</div>
 	
 	<div th:fragment="search_form_and_message()">
-		<form th:action="@{${moduleURL} + '/page/1'}" class="form-inline m-3">
+		<form th:action="@{${moduleURL} }" class="form-inline m-3">
 			<input type="hidden" name="sortField" th:value="${sortField}" />
 			<input type="hidden" name="sortDir" th:value="${sortDir}" />
 			
@@ -179,7 +179,7 @@
 	
 	<th th:fragment="column_link1(fieldName, columnLabel, removeTag)" th:remove="${removeTag}">
 		<a class="text-white"
-			th:href="@{${moduleURL} + '/page/' + ${currentPage} + '?sortField=' + ${fieldName}  +'&sortDir=' + ${sortField != fieldName ? sortDir : reverseSortDir} + ${keyword != null ? '&keyword=' + keyword : ''} + ${categoryId != null ? '&categoryId=' + categoryId : ''}}">
+			th:href="@{${currentPage} + '?sortField=' + ${fieldName}  +'&sortDir=' + ${sortField != fieldName ? sortDir : reverseSortDir} + ${keyword != null ? '&keyword=' + keyword : ''} + ${categoryId != null ? '&categoryId=' + categoryId : ''}}">
 			[[${columnLabel}]]
 		</a>								
 		<span th:if="${sortField == fieldName}"
