@@ -12,14 +12,14 @@ public class PaymentSettingBag extends SettingBag {
 	}
 
 	public String getURL() {
-		return super.getValue("PAYPAL_API_BASE_URL");
+		return "https://api-m.sandbox.paypal.com";
 	}
 	
 	public String getClientID() {
-		return super.getValue("PAYPAL_API_CLIENT_ID");
+		return "AfnU7buI3EXXT_4r9UK9LYTwYqF6lkmlh2f3e1Fe_L7WDCHtMd8muEzOk33bJmM4GgC3tB6xtWmHePR1";
 	}
 	
 	public String getClientSecret() {
-		return super.getValue("PAYPAL_API_CLIENT_SECRET");
+		return "EGCSfahmWNgAz76-12HnqSaEx4W4oStaQKsq57vu8m-v-M5wD_HyDODvdmselhGnrLQq2dbrsiBdh1ru";
 	}
 }

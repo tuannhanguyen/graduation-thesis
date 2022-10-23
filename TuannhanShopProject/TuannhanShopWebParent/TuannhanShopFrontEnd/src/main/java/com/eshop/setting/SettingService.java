@@ -28,5 +28,9 @@ public class SettingService {
 		List<Setting> settings = settingRepo.findByCategory(SettingCategory.PAYMENT);
 		return new PaymentSettingBag(settings);
 	}
+	
+	public String getCurrencyCode() {
+		return "USD";
+	}
 
 }
