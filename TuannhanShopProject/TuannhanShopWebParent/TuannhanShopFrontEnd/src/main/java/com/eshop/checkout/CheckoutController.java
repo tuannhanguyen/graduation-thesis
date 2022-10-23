@@ -30,6 +30,7 @@ import com.eshop.common.entity.ShippingRate;
 import com.eshop.customer.CustomerNotFoundException;
 import com.eshop.customer.CustomerService;
 import com.eshop.order.OrderService;
+import com.eshop.setting.CurrencySettingBag;
 import com.eshop.setting.EmailSettingBag;
 import com.eshop.setting.PaymentSettingBag;
 import com.eshop.setting.SettingService;
@@ -105,7 +106,7 @@ public class CheckoutController {
 		
 		Order createdOrder = orderService.createOrder(customer, defaultAddress, cartItems, paymentMethod, checkoutInfo);
 		cartService.deleteByCustomer(customer);
-		sendOrderConfirmationEmail(request, createdOrder);
+		//sendOrderConfirmationEmail(request, createdOrder);
 		
 		return "checkout/order_completed";
 	}
@@ -132,14 +133,14 @@ public class CheckoutController {
 		DateFormat dateFormatter =  new SimpleDateFormat("HH:mm:ss E, dd MMM yyyy");
 		String orderTime = dateFormatter.format(order.getOrderTime());
 		
-//		CurrencySettingBag currencySettings = settingService.getCurrencySettings();
-//		String totalAmount = Utility.formatCurrency(order.getTotal(), currencySettings);
+		CurrencySettingBag currencySettings = settingService.getCurrencySettings();
+		String totalAmount = Utility.formatCurrency(order.getTotal(), currencySettings);
 		
 		content = content.replace("[[name]]", order.getCustomer().getFullName());
 		content = content.replace("[[orderId]]", String.valueOf(order.getId()));
 		content = content.replace("[[orderTime]]", orderTime);
 		content = content.replace("[[shippingAddress]]", order.getShippingAddress());
-//		content = content.replace("[[total]]", totalAmount);
+		content = content.replace("[[total]]", totalAmount);
 		content = content.replace("[[total]]", "test");
 		content = content.replace("[[paymentMethod]]", order.getPaymentMethod().toString());
 		

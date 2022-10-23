@@ -12,6 +12,11 @@ import com.eshop.common.entity.SettingCategory;
 public class SettingService {
 	@Autowired private SettingRepository settingRepo;
 	
+	public CurrencySettingBag getCurrencySettings() {
+		List<Setting> settings = settingRepo.findByCategory(SettingCategory.CURRENCY);
+		return new CurrencySettingBag(settings);
+	}
+	
 	public EmailSettingBag getEmailSettings() {
 		List<Setting> settings = settingRepo.findByCategory(SettingCategory.MAIL_SERVER);
 		settings.addAll(settingRepo.findByCategory(SettingCategory.MAIL_TEMPLATES));
