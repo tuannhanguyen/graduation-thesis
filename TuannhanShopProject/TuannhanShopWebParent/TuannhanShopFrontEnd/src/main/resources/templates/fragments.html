@@ -99,6 +99,11 @@
             </div>
         </div>
     </div>
+    
+    <div th:fragment="format_currency(amount)" th:remove="tag">
+	[[${#numbers.formatDecimal(amount, 1, 'POINT', 1, 'COMMA')}]]
+	<span th:remove="tag">$</span>
+</div>
 
 </body>
 

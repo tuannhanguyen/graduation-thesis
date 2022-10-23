@@ -36,7 +36,6 @@ public class OrderController {
 	private String defaultRedirectURL = "redirect:/orders/page/1?sortField=orderTime&sortDir=desc";
 	
 	@Autowired private OrderService orderService;
-	//@Autowired private SettingService settingService;
 
 	@GetMapping("/orders")
 	public String listFirstPage() {

@@ -22,6 +22,9 @@ public class CartItem {
 	@JoinColumn(name = "product_id")
 	private Product product;
 	
+	@Transient
+	private float shippingCost;
+	
 	@ManyToOne
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
@@ -55,6 +58,15 @@ public class CartItem {
 	@Transient
 	public float getSubTotal() {
 		return product.getDiscountPrice() * quantity;
+	}
+	
+	@Transient
+	public float getShippingCost() {
+		return shippingCost;
+	}
+
+	public void setShippingCost(float shippingCost) {
+		this.shippingCost = shippingCost;
 	}
 	
 }
