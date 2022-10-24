@@ -1,6 +1,6 @@
 decimalSeparator = ','
 thousandsSeparator = '.'
-decimalDigits = 1
+decimalDigits = 2
 
 $(document).ready(function() {
 	$(".linkMinus").on("click", function(evt) {

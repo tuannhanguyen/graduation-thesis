@@ -48,7 +48,7 @@
 			    <label class="col-sm-2 col-form-label">Payment Method:</label>
 			    <div class="col-sm-10">
 				      <select th:field="*{paymentMethod}" class="form-control" required style="max-width: 150px">
-			  			<option th:each="pm : ${T(com.shopme.common.entity.order.PaymentMethod).values()}"
+			  			<option th:each="pm : ${T(com.eshop.common.entity.PaymentMethod).values()}"
 			  				th:value="${pm}" th:text="${pm}" />
 				      </select>
 			    </div>
@@ -57,7 +57,7 @@
 			    <label class="col-sm-2 col-form-label">Status:</label>
 			    <div class="col-sm-10">
 				      <select th:field="*{status}" class="form-control" required style="max-width: 150px">
-			  			<option th:each="os : ${T(com.shopme.common.entity.order.OrderStatus).values()}"
+			  			<option th:each="os : ${T(com.eshop.common.entity.OrderStatus).values()}"
 			  				th:value="${os}" th:text="${os}" />
 				      </select>
 			    </div>

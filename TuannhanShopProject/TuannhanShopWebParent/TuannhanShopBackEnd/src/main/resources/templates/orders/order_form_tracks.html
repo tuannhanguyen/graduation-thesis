@@ -43,7 +43,7 @@
 				      		th:disabled="${isTrackWithStatusNew}"
 				      		th:id="${isTrackWithStatusNew ? 'trackStatusOptions' : ''}">
 				      	
-				      	<th:block th:each="os : ${T(com.shopme.common.entity.order.OrderStatus).values()}">
+				      	<th:block th:each="os : ${T(com.eshop.common.entity.OrderStatus).values()}">
 			  				<option	th:value="${os}" th:text="${os}" th:selected="${os == track.status}"
 			  					th:defaultDescription="${os.defaultDescription}" />
 				      	</th:block>

@@ -39,7 +39,7 @@
 					</div>
 					<div>
 						<span>=&nbsp;</span>
-						<span th:id="'subtotal' + ${product.id}" class="h4 subtotal">[[${#numbers.formatDecimal(item.subTotal, 1, 'POINT', 1, 'COMMA')}]]</span>
+						<span th:id="'subtotal' + ${product.id}" class="h4 subtotal">[[${#numbers.formatDecimal(item.subTotal, 1, 'POINT', 2, 'COMMA')}]]</span>
 						<span th:remove="tag">$</span>						
 					</div>					
 				</div>

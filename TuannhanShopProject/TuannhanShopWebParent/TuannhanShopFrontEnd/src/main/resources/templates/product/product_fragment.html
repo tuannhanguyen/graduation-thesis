@@ -34,7 +34,7 @@
 </div>
 <div th:fragment="price_fragment(productPrice)" th:remove="tag">
 	<span>
-		[[${#numbers.formatDecimal(productPrice, 1, 'POINT', 1, 'COMMA')}]]
+		[[${#numbers.formatDecimal(productPrice, 1, 'POINT', 2, 'COMMA')}]]
 		<span th:remove="tag">$</span>
 	</span>
 </div>
