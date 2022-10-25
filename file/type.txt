@@ -1,0 +1,16 @@
+amount, 1, 'POINT', 1, 'COMMA'
+
+
+	thousandsPointType = 'COMMA'
+	decimalPointType = 'POINT'
+
+amount, 1, 'COMMA', 2, 'POINT'
+
+thousandsPointType , decimalPointType 
+
+format lại currency
+tìm lỗi format ở trang order form product
+
+
+
+
