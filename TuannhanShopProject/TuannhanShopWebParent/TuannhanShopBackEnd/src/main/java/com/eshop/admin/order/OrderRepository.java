@@ -11,8 +11,9 @@ import com.eshop.admin.paging.SearchRepository;
 import com.eshop.common.entity.Order;
 
 public interface OrderRepository extends SearchRepository<Order, Integer> {
-	
-	@Query("SELECT o FROM Order o WHERE o.id LIKE %?1% OR "
+
+	@Override
+    @Query("SELECT o FROM Order o WHERE o.id LIKE %?1% OR "
 			+ " CONCAT(o.firstName, ' ', o.lastName) LIKE %?1% OR"
 			+ " o.firstName LIKE %?1% OR"
 			+ " o.lastName LIKE %?1% OR o.phoneNumber LIKE %?1% OR"
@@ -23,11 +24,11 @@ public interface OrderRepository extends SearchRepository<Order, Integer> {
 			+ " o.customer.firstName LIKE %?1% OR"
 			+ " o.customer.lastName LIKE %?1%")
 	public Page<Order> findAll(String keyword, Pageable pageable);
-	
+
 	public Long countById(Integer id);
-	
-//	@Query("SELECT  com.eshop.common.entity.Order(o.id, o.orderTime, o.productCost,"
-//			+ " o.subtotal, o.total) FROM Order o WHERE"
-//			+ " o.orderTime BETWEEN ?1 AND ?2 ORDER BY o.orderTime ASC")
-//	public List<Order> findByOrderTimeBetween(Date startTime, Date endTime);
+
+	@Query("SELECT NEW com.eshop.common.entity.Order(o.id, o.orderTime, o.productCost,"
+			+ " o.subtotal, o.total) FROM Order o WHERE"
+			+ " o.orderTime BETWEEN ?1 AND ?2 ORDER BY o.orderTime ASC")
+	public List<Order> findByOrderTimeBetween(Date startTime, Date endTime);
 }
