@@ -25,41 +25,41 @@ import javax.persistence.Transient;
 @Entity
 @Table(name = "orders")
 public class Order extends AbstractAddress {
-	
+
 	@Column(nullable = false, length = 45)
 	private String country;
-	
+
 	private Date orderTime;
-	
+
 	private float shippingCost;
 	private float productCost;
 	private float subtotal;
 	private float tax;
 	private float total;
-	
+
 	private int deliverDays;
 	private Date deliverDate;
-	
+
 	@Enumerated(EnumType.STRING)
 	private PaymentMethod paymentMethod;
-	
+
 	@Enumerated(EnumType.STRING)
 	private OrderStatus status;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
-	
+
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<OrderDetail> orderDetails = new HashSet<>();
-	
+
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
 	@OrderBy("updatedTime ASC")
 	private List<OrderTrack> orderTracks = new ArrayList<>();
-	
+
 	public Order() {
 	}
-	
+
 	public Order(Integer id, Date orderTime, float productCost, float subtotal, float total) {
 		this.id = id;
 		this.orderTime = orderTime;
@@ -171,7 +171,7 @@ public class Order extends AbstractAddress {
 	public void setOrderDetails(Set<OrderDetail> orderDetails) {
 		this.orderDetails = orderDetails;
 	}
-	
+
 	public void copyAddressFromCustomer() {
 		setFirstName(customer.getFirstName());
 		setLastName(customer.getLastName());
@@ -181,7 +181,7 @@ public class Order extends AbstractAddress {
 		setCity(customer.getCity());
 		setCountry(customer.getCountry().getName());
 		setPostalCode(customer.getPostalCode());
-		setState(customer.getState());		
+		setState(customer.getState());
 	}
 
 	@Override
@@ -189,13 +189,13 @@ public class Order extends AbstractAddress {
 		return "Order [id=" + id + ", subtotal=" + subtotal + ", paymentMethod=" + paymentMethod + ", status=" + status
 				+ ", customer=" + customer.getFullName() + "]";
 	}
-	
+
 	@Transient
 	public String getDestination() {
 		String destination =  city + ", ";
 		if (state != null && !state.isEmpty()) destination += state + ", ";
 		destination += country;
-		
+
 		return destination;
 	}
 
@@ -208,28 +208,28 @@ public class Order extends AbstractAddress {
 		setCity(address.getCity());
 		setCountry(address.getCountry().getName());
 		setPostalCode(address.getPostalCode());
-		setState(address.getState());			
+		setState(address.getState());
 	}
-	
+
 	@Transient
 	public String getShippingAddress() {
 		String address = firstName;
-		
+
 		if (lastName != null && !lastName.isEmpty()) address += " " + lastName;
-		
+
 		if (!addressLine1.isEmpty()) address += ", " + addressLine1;
-		
+
 		if (addressLine2 != null && !addressLine2.isEmpty()) address += ", " + addressLine2;
-		
+
 		if (!city.isEmpty()) address += ", " + city;
-		
+
 		if (state != null && !state.isEmpty()) address += ", " + state;
-		
+
 		address += ", " + country;
-		
+
 		if (!postalCode.isEmpty()) address += ". Postal Code: " + postalCode;
 		if (!phoneNumber.isEmpty()) address += ". Phone Number: " + phoneNumber;
-		
+
 		return address;
 	}
 
@@ -240,67 +240,67 @@ public class Order extends AbstractAddress {
 	public void setOrderTracks(List<OrderTrack> orderTracks) {
 		this.orderTracks = orderTracks;
 	}
-	
+
 	@Transient
 	public String getDeliverDateOnForm() {
 		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 		return dateFormatter.format(this.deliverDate);
-	}	
-	
+	}
+
 	public void setDeliverDateOnForm(String dateString) {
 		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
- 		
+
 		try {
 			this.deliverDate = dateFormatter.parse(dateString);
 		} catch (ParseException e) {
 			e.printStackTrace();
-		} 		
+		}
 	}
-	
+
 	@Transient
 	public String getRecipientName() {
 		String name = firstName;
 		if (lastName != null && !lastName.isEmpty()) name += " " + lastName;
 		return name;
 	}
-	
+
 	@Transient
 	public String getRecipientAddress() {
 		String address = addressLine1;
-		
+
 		if (addressLine2 != null && !addressLine2.isEmpty()) address += ", " + addressLine2;
-		
+
 		if (!city.isEmpty()) address += ", " + city;
-		
+
 		if (state != null && !state.isEmpty()) address += ", " + state;
-		
+
 		address += ", " + country;
-		
+
 		if (!postalCode.isEmpty()) address += ". " + postalCode;
-		
+
 		return address;
-	}	
-	
+	}
+
 	@Transient
 	public boolean isCOD() {
 		return paymentMethod.equals(PaymentMethod.COD);
 	}
-	
+
 	@Transient
 	public boolean isProcessing() {
 		return hasStatus(OrderStatus.PROCESSING);
 	}
-	
+
 	@Transient
 	public boolean isPicked() {
 		return hasStatus(OrderStatus.PICKED);
 	}
-	
+
 	@Transient
 	public boolean isShipping() {
 		return hasStatus(OrderStatus.SHIPPING);
 	}
-	
+
 	@Transient
 	public boolean isDelivered() {
 		return hasStatus(OrderStatus.DELIVERED);
@@ -309,35 +309,35 @@ public class Order extends AbstractAddress {
 	@Transient
 	public boolean isReturnRequested() {
 		return hasStatus(OrderStatus.RETURN_REQUESTED);
-	}	
-	
+	}
+
 	@Transient
 	public boolean isReturned() {
 		return hasStatus(OrderStatus.RETURNED);
-	}	
-	
+	}
+
 	public boolean hasStatus(OrderStatus status) {
 		for (OrderTrack aTrack : orderTracks) {
 			if (aTrack.getStatus().equals(status)) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	@Transient
 	public String getProductNames() {
 		String productNames = "";
-		
+
 		productNames = "<ul>";
-		
+
 		for (OrderDetail detail : orderDetails) {
-			productNames += "<li>" + detail.getProduct().getName() + "</li>";			
+			productNames += "<li>" + detail.getProduct().getName() + "</li>";
 		}
-		
+
 		productNames += "</ul>";
-		
+
 		return productNames;
-	}	
+	}
 }

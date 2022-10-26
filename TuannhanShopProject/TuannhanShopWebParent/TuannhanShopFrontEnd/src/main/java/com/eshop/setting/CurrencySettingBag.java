@@ -14,20 +14,20 @@ public class CurrencySettingBag extends SettingBag {
 	public String getSymbol() {
 		return "$";
 	}
-	
+
 	public String getSymbolPosition() {
 		return "After";
 	}
-	
+
 	public String getDecimalPointType() {
-		return "COMMA";
+		return "POINT";
 	}
 
 	public String getThousandPointType() {
-		return "POINT";
-	}	
-	
+		return "COMMA";
+	}
+
 	public int getDecimalDigits() {
-		return 1;
+		return 2;
 	}
 }
