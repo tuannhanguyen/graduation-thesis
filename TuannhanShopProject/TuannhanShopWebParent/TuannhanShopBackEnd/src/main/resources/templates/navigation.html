@@ -81,6 +81,11 @@
 	                            <a class="nav-link" th:href="@{/reports}">Sales Report</a>
 	                        </li>
                         </th:block>
+                        <th:block sec:authorize="hasAnyAuthority('Admin', 'Assistant')">
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/reviews}">Reviews</a>
+                            </li>
+                        </th:block>
                         <th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
 	                        <li class="nav-item">
 	                            <a class="nav-link" th:href="@{/menus}">Menus</a>

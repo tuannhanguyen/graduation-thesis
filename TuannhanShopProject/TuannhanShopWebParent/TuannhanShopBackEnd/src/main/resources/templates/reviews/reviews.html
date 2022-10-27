@@ -14,11 +14,11 @@
 		<table class="table table-bordered table-striped table-hover table-responsive-xl">
 			<thead class="thead-dark">
 				<tr>
-					<th th:replace="fragments :: column_link('id', 'ID', 'none')" />
-					<th th:replace="fragments :: column_link('product', 'Product', 'none')" />
-					<th th:replace="fragments :: column_link('customer', 'Customer', 'none')" />
-					<th th:replace="fragments :: column_link('rating', 'Rating', 'none')" />
-					<th th:replace="fragments :: column_link('reviewTime', 'Review Time', 'none')" />
+					<th th:replace="fragments :: column_link1('id', 'ID', 'none')" />
+					<th th:replace="fragments :: column_link1('product', 'Product', 'none')" />
+					<th th:replace="fragments :: column_link1('customer', 'Customer', 'none')" />
+					<th th:replace="fragments :: column_link1('rating', 'Rating', 'none')" />
+					<th th:replace="fragments :: column_link1('reviewTime', 'Review Time', 'none')" />
 					<th></th>
 				</tr>								
 			</thead>
@@ -31,7 +31,7 @@
 						</a>
 					</td>
 					<td>
-						<a th:href="@{'/customers/detail/' + ${review.customer.id}}" class="link-detail-customer">
+						<a th:href="@{'/customers/details/' + ${review.customer.id}}" class="link-detail-customer">
 							[[${review.customer.fullName}]]
 						</a>
 					</td>
@@ -54,7 +54,7 @@
 	
 	<div th:replace="fragments :: pagination1('reviews')"></div>
 	
-	<div th:replace="modal_fragments :: confirm_modal" />
+	<div th:replace="modal_fragments :: comfirm_modal" />
 	
 	<div class="modal fade" id="xlargeModal">
 		<div class="modal-dialog modal-xl">
@@ -87,7 +87,7 @@
 	function handleDeleteLink() {
 		$(".link-delete").on("click", function(e) {
 			e.preventDefault();
-			showDeleteConfirmModal($(this), 'review');
+			showDeleteConfirmation($(this), 'review');
 		});		
 	}
 	
