@@ -42,7 +42,7 @@ public class OrderDetailReportService extends AbstractReportService {
             ReportItem reportItem = new ReportItem(identifier);
 
             float grossSales = detail.getSubtotal() + detail.getShippingCost();
-            float netSales = detail.getSubtotal() - detail.getProductCost();
+            float netSales = detail.getSubtotal() - detail.getProductCost() / detail.getQuantity();
 
             int itemIndex = listReportItems.indexOf(reportItem);
 
