@@ -10,16 +10,23 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.eshop.ControllerHelper;
 import com.eshop.category.CategoryService;
 import com.eshop.common.entity.Category;
 import com.eshop.common.entity.Product;
+import com.eshop.common.entity.Review;
 import com.eshop.common.exception.ProductNotFoundException;
+import com.eshop.review.ReviewService;
+import com.eshop.review.vote.ReviewVoteService;
 
 @Controller
 public class ProductController {
 
 	@Autowired ProductService productService;
 	@Autowired private CategoryService categoryService;
+	@Autowired private ReviewService reviewService;
+    @Autowired private ReviewVoteService voteService;
+    @Autowired private ControllerHelper controllerHelper;
 
 	@GetMapping("/c/{category_alias}")
 	public String viewCategoryFirstPage(@PathVariable("category_alias") String alias,
@@ -65,8 +72,10 @@ public class ProductController {
 		try {
 			Product product = productService.getProduct(alias);
 			List<Category> listCategoryParents = categoryService.getCategoryParents(product.getCategory());
+			Page<Review> listReviews = reviewService.list3MostVotedReviewsByProduct(product);
 
 			model.addAttribute("product", product);
+			model.addAttribute("listReviews", listReviews);
 			model.addAttribute("listCategoryParents", listCategoryParents);
 			model.addAttribute("pageTitle", product.getName());
 
