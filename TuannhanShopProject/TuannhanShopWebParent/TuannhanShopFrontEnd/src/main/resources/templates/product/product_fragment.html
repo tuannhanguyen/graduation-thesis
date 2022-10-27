@@ -7,6 +7,17 @@
                     th:src="@{${product.mainImagePath}}" width="150"> <br /> <b>[[${product.name}]]</b>
                 </a>
             </div>
+            <div>
+                    <table>
+                        <tr>
+                            <td>
+                                <input type="text" class="product-detail-rating-star" dir="ltr" data-size="xs"
+                                    th:value="${product.averageRating}"/>               
+                            </td>
+                            <td><small>[[${product.reviewCount}]]</small></td>
+                        </tr>
+                </table>
+            </div>
             <div th:if="${product.discountPercent <= 0}">
                 <span>[[${#numbers.formatDecimal(price, 1, 'COMMA', 2, 'POINT')}]] $</span>
             </div>

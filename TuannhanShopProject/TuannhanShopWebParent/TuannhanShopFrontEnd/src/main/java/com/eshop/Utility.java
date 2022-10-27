@@ -20,7 +20,7 @@ public class Utility {
 	}
 
 
-	public static String getEmailOrAuthenticatedCustomer(HttpServletRequest request) {
+	public static String getEmailOfAuthenticatedCustomer(HttpServletRequest request) {
 		Object principal = request.getUserPrincipal();
 		if(principal == null) return null;
 

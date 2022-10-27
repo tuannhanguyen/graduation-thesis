@@ -53,7 +53,7 @@
 			<nav class="navbar navbar-expand-sm bg-light ">
 				<div class="collaps navbar-collapse" id="searchNavbar">
 					<form class="form-inline" th:action="@{/search}" method="get">
-						<input type="search" th:value="${keyword}" 
+						<input type="search" th:value="${searchKeyword}" 
 						name="keyword" class="form-control mr-sm-2"
 						placeholder="keyword" required="required">
 						<input type="submit" value="Search" class="btn btn-outline-success">

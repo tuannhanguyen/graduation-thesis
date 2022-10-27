@@ -46,7 +46,7 @@ public class OrderRestController {
 	}
 	
 	private Customer getAuthenticatedCustomer(HttpServletRequest request) throws CustomerNotFoundException {
-		String email = Utility.getEmailOrAuthenticatedCustomer(request);
+		String email = Utility.getEmailOfAuthenticatedCustomer(request);
 		if (email == null) {
 			throw new CustomerNotFoundException("No Authenticated customer");
 		}

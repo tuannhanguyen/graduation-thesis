@@ -77,10 +77,10 @@ public class Product {
 
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ProductDetail> details = new ArrayList<>();
-	
+
 	private int reviewCount;
 	private float averageRating;
-	
+
 	@Transient private boolean customerCanReview;
 	@Transient private boolean reviewedByCustomer;
 
@@ -344,5 +344,8 @@ public class Product {
 		this.reviewedByCustomer = reviewedByCustomer;
 	}
 
-
+	@Transient
+    public String getURI() {
+        return "/p/" + this.alias + "/";
+    }
 }
