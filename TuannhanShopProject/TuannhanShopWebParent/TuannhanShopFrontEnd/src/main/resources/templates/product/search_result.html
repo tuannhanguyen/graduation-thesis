@@ -19,7 +19,7 @@
          
          <div class="row">
          	<th:block th:each="product : ${listResult}">
-	         	<div th:replace="product/product_fragment :: content"></div>
+	         	<div th:replace="product/product_fragment :: content(${product.price}, ${product.discountPrice})"></div>
          	</th:block>
          </div>
             
