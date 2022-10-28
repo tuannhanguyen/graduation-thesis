@@ -1,18 +1,97 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head th:replace="fragments :: page_head('Home', 'none')"></head>
 
 <body>
-    <div class="container-fluid">
-        <div th:replace="navigation :: menu"></div>
-        <div>
-            <h1>Home - Admin Control Panel</h1>
-            Welcome 
-            <a th:href="@{/account}" sec:authentication="principal.fullName"></a>
-            <span sec:authentication="principal.authorities"></span>
-        </div>
-        <div th:replace="fragments :: footer"></div>
-    </div>
+	<div class="container-fluid">
+		<div th:replace="navigation :: menu"></div>
+		<div>
+			<h1>Home - Admin Control Panel</h1>
+			Welcome <a th:href="@{/account}"
+				sec:authentication="principal.fullName"></a> <span
+				sec:authentication="principal.authorities"></span>
+		</div>
+
+		<div>
+			<div
+				class="d-sm-flex align-items-center justify-content-between mb-4">
+			</div>
+			<div class="row">
+				<div class="col-xl-3 col-md-6 mb-4">
+					<div class="card">
+						<h5 class="card-header">Users</h5>
+						<div class="card-body">
+							<a th:href="@{/users/new}">Add new user</a><br> <a
+								th:href="@{/users}">View all</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-xl-3 col-md-6 mb-4">
+					<div class="card">
+						<h5 class="card-header">Categories</h5>
+						<div class="card-body">
+							<a th:href="@{/categories/new}">Add new category</a><br> <a
+								th:href="@{/categories}">View all</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-xl-3 col-md-6 mb-4">
+					<div class="card">
+						<h5 class="card-header">Brands</h5>
+						<div class="card-body">
+							<a  th:href="@{/brands/new}">Add new brand</a><br> 
+							<a th:href="@{/brands}">View all</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-xl-3 col-md-6 mb-4">
+					<div class="card">
+						<h5 class="card-header">Products</h5>
+						<div class="card-body">
+							<a  th:href="@{/products/new}">Add new product</a><br> 
+							<a th:href="@{/products}">View all</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-xl-3 col-md-6 mb-4">
+					<div class="card">
+						<h5 class="card-header">Customers</h5>
+						<div class="card-body">
+							<a th:href="@{/customers}">View all</a><br>
+						</div>
+					</div>
+				</div>
+				<div class="col-xl-3 col-md-6 mb-4">
+					<div class="card">
+						<h5 class="card-header">Shipping Rates</h5>
+						<div class="card-body">
+							<a th:href="@{/shipping_rates/new}">Add new rate</a><br>
+							<a th:href="@{/shipping_rates}">View all</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-xl-3 col-md-6 mb-4">
+					<div class="card">
+						<h5 class="card-header">Orders</h5>
+						<div class="card-body">
+							<a th:href="@{/orders}">View all</a><br>
+						</div>
+					</div>
+				</div>
+				<div class="col-xl-3 col-md-6 mb-4">
+					<div class="card">
+						<h5 class="card-header">Reviews</h5>
+						<div class="card-body">
+							<a th:href="@{/reviews}">View all</a><br>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<div th:replace="fragments :: footer"></div>
+	</div>
 </body>
 
 </html>

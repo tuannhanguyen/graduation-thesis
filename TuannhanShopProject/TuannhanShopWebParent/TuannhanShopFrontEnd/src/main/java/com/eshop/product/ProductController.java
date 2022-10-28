@@ -2,6 +2,8 @@ package com.eshop.product;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.eshop.ControllerHelper;
 import com.eshop.category.CategoryService;
 import com.eshop.common.entity.Category;
+import com.eshop.common.entity.Customer;
 import com.eshop.common.entity.Product;
 import com.eshop.common.entity.Review;
 import com.eshop.common.exception.ProductNotFoundException;
@@ -68,11 +71,26 @@ public class ProductController {
 	}
 
 	@GetMapping("/p/{product_alias}")
-	public String viewProductDetail(@PathVariable("product_alias") String alias, Model model) {
+	public String viewProductDetail(@PathVariable("product_alias") String alias, Model model, 
+			HttpServletRequest request) {
 		try {
 			Product product = productService.getProduct(alias);
 			List<Category> listCategoryParents = categoryService.getCategoryParents(product.getCategory());
 			Page<Review> listReviews = reviewService.list3MostVotedReviewsByProduct(product);
+			
+			Customer customer = controllerHelper.getAuthenticatedCustomer(request);
+			
+			if (customer != null) {
+				boolean customerReviewed = reviewService.didCustomerReviewProduct(customer, product.getId());
+				voteService.markReviewsVotedForProductByCustomer(listReviews.getContent(), product.getId(), customer.getId());
+				
+				if (customerReviewed) {
+					model.addAttribute("customerReviewed", customerReviewed);
+				} else {
+					boolean customerCanReview = reviewService.canCustomerReviewProduct(customer, product.getId());
+					model.addAttribute("customerCanReview", customerCanReview);
+				}
+			}
 
 			model.addAttribute("product", product);
 			model.addAttribute("listReviews", listReviews);
