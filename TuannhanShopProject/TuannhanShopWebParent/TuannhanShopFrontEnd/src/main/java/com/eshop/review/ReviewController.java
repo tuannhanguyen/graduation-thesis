@@ -6,6 +6,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +23,7 @@ import com.eshop.common.entity.Review;
 import com.eshop.common.exception.ProductNotFoundException;
 import com.eshop.product.ProductService;
 import com.eshop.review.vote.ReviewVoteService;
+import com.eshop.shoppingcart.ShoppingCartService;
 
 @Controller
 public class ReviewController {
@@ -29,6 +33,7 @@ public class ReviewController {
     @Autowired private ControllerHelper controllerHelper;
     @Autowired private ProductService productService;
     @Autowired private ReviewVoteService voteService;
+    @Autowired private ShoppingCartService cartService;
 
     @GetMapping("/reviews")
     public String listFirstPage(Model model) {
@@ -62,6 +67,13 @@ public class ReviewController {
             endCount = page.getTotalElements();
         }
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+                Integer quantityInCart = cartService.countQuantityinCart(customer);
+                model.addAttribute("quantityInCart", quantityInCart);
+
+        }
+
         model.addAttribute("endCount", endCount);
 
         return "reviews/reviews_customer";
@@ -74,6 +86,13 @@ public class ReviewController {
         try {
             Review review = reviewService.getByCustomerAndId(customer, id);
             model.addAttribute("review", review);
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+                    Integer quantityInCart = cartService.countQuantityinCart(customer);
+                    model.addAttribute("quantityInCart", quantityInCart);
+
+            }
 
             return "reviews/review_detail_modal";
         } catch (ReviewNotFoundException ex) {
@@ -126,6 +145,13 @@ public class ReviewController {
         model.addAttribute("endCount", endCount);
         model.addAttribute("pageTitle", "Reviews for " + product.getName());
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+                Integer quantityInCart = cartService.countQuantityinCart(customer);
+                model.addAttribute("quantityInCart", quantityInCart);
+
+        }
+
         return "reviews/reviews_product";
     }
 
@@ -167,6 +193,13 @@ public class ReviewController {
         model.addAttribute("product", product);
         model.addAttribute("review", review);
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+                Integer quantityInCart = cartService.countQuantityinCart(customer);
+                model.addAttribute("quantityInCart", quantityInCart);
+
+        }
+
         return "reviews/review_form";
     }
 
@@ -188,6 +221,13 @@ public class ReviewController {
         Review savedReview = reviewService.save(review);
 
         model.addAttribute("review", savedReview);
+        
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+                Integer quantityInCart = cartService.countQuantityinCart(customer);
+                model.addAttribute("quantityInCart", quantityInCart);
+
+        }
 
         return "reviews/review_done";
     }

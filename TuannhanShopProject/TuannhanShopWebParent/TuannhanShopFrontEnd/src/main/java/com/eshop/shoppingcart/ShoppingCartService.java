@@ -59,9 +59,18 @@ public class ShoppingCartService {
 	public void removeProduct(Integer id, Customer customer) {
 		cartRepo.deleteByCustomerAndProduct(customer.getId(), id);
 	}
-	
+
 	public void deleteByCustomer(Customer customer) {
 		cartRepo.deleteByCustomer(customer.getId());
+	}
+
+	public Integer countQuantityinCart(Customer customer) {
+	    List<CartItem> lisCartItems = cartRepo.findByCustomer(customer);
+	    if (lisCartItems == null || lisCartItems.isEmpty()) {
+	        return 0;
+	    }
+
+	    return cartRepo.countQuantiyInCart(customer.getId());
 	}
 
 }

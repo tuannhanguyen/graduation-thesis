@@ -13,6 +13,5 @@ $(".product-detail-rating-star").rating({
 function formatRatingNumber() {
     ratingText = $("#ratingNumber").text();
     formattedRating = $.number(ratingText, 2, decimalSeparator, thousandSeparator);
-    formattedRatingParseormattedRating
     $("#ratingNumber").text(formattedRating);
 }

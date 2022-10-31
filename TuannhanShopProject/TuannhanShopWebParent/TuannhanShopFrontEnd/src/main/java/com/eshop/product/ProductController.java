@@ -7,6 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +24,7 @@ import com.eshop.common.entity.Review;
 import com.eshop.common.exception.ProductNotFoundException;
 import com.eshop.review.ReviewService;
 import com.eshop.review.vote.ReviewVoteService;
+import com.eshop.shoppingcart.ShoppingCartService;
 
 @Controller
 public class ProductController {
@@ -30,17 +34,18 @@ public class ProductController {
 	@Autowired private ReviewService reviewService;
     @Autowired private ReviewVoteService voteService;
     @Autowired private ControllerHelper controllerHelper;
+    @Autowired ShoppingCartService cartService;
 
 	@GetMapping("/c/{category_alias}")
 	public String viewCategoryFirstPage(@PathVariable("category_alias") String alias,
-			Model model) {
-		return viewCategoryByPage(alias, 1, model);
+			Model model, HttpServletRequest request) {
+		return viewCategoryByPage(alias, 1, model, request);
 	}
 
 	@GetMapping("/c/{category_alias}/page/{pageNum}")
 	public String viewCategoryByPage(@PathVariable("category_alias") String alias,
 			@PathVariable(name = "pageNum") int pageNum,
-			Model model) {
+			Model model,  HttpServletRequest request) {
 		Category category = categoryService.getCategory(alias);
 		if (category == null) {
 			return "error/404";
@@ -67,23 +72,32 @@ public class ProductController {
 		model.addAttribute("listProducts", listProducts);
 		model.addAttribute("category", category);
 
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+            Customer customer = controllerHelper.getAuthenticatedCustomer(request);
+            Integer quantityInCart = cartService.countQuantityinCart(customer);
+            model.addAttribute("quantityInCart", quantityInCart);
+
+        }
+
+
 		return "product/products_by_category";
 	}
 
 	@GetMapping("/p/{product_alias}")
-	public String viewProductDetail(@PathVariable("product_alias") String alias, Model model, 
+	public String viewProductDetail(@PathVariable("product_alias") String alias, Model model,
 			HttpServletRequest request) {
 		try {
 			Product product = productService.getProduct(alias);
 			List<Category> listCategoryParents = categoryService.getCategoryParents(product.getCategory());
 			Page<Review> listReviews = reviewService.list3MostVotedReviewsByProduct(product);
-			
+
 			Customer customer = controllerHelper.getAuthenticatedCustomer(request);
-			
+
 			if (customer != null) {
 				boolean customerReviewed = reviewService.didCustomerReviewProduct(customer, product.getId());
 				voteService.markReviewsVotedForProductByCustomer(listReviews.getContent(), product.getId(), customer.getId());
-				
+
 				if (customerReviewed) {
 					model.addAttribute("customerReviewed", customerReviewed);
 				} else {
@@ -97,6 +111,13 @@ public class ProductController {
 			model.addAttribute("listCategoryParents", listCategoryParents);
 			model.addAttribute("pageTitle", product.getName());
 
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+	            Integer quantityInCart = cartService.countQuantityinCart(customer);
+	            model.addAttribute("quantityInCart", quantityInCart);
+
+	        }
+
 			return "product/product_detail";
 		} catch (ProductNotFoundException e) {
 			return "error/404";
@@ -104,14 +125,21 @@ public class ProductController {
 	}
 
 	@GetMapping("/search")
-	public String searchFirstPage(@Param("keyword") String keyword, Model model) {
-		return searchByPage(keyword, 1, model);
+	public String searchFirstPage(@Param("keyword") String keyword, Model model, HttpServletRequest request) {
+	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+            Customer customer = controllerHelper.getAuthenticatedCustomer(request);
+            Integer quantityInCart = cartService.countQuantityinCart(customer);
+            model.addAttribute("quantityInCart", quantityInCart);
+
+        }
+		return searchByPage(keyword, 1, model, request);
 	}
 
 	@GetMapping("/search/page/{pageNum}")
 	public String searchByPage(@Param("keyword") String keyword,
 			@PathVariable("pageNum") int pageNum,
-			Model model) {
+			Model model, HttpServletRequest request) {
 		Page<Product> pageProducts = productService.search(keyword, pageNum);
 		List<Product> listResult = pageProducts.getContent();
 
@@ -131,6 +159,14 @@ public class ProductController {
 		model.addAttribute("keyword", keyword);
 		model.addAttribute("searchKeyword", keyword);
 		model.addAttribute("listResult", listResult);
+
+		 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+	            Customer customer = controllerHelper.getAuthenticatedCustomer(request);
+	            Integer quantityInCart = cartService.countQuantityinCart(customer);
+	            model.addAttribute("quantityInCart", quantityInCart);
+
+	        }
 
 		return "product/search_result";
 	}

@@ -20,6 +20,7 @@ import com.eshop.common.entity.Country;
 import com.eshop.common.entity.Customer;
 import com.eshop.security.CustomerUserDetails;
 import com.eshop.setting.CountryRepository;
+import com.eshop.shoppingcart.ShoppingCartService;
 
 @Controller
 public class CustomerController {
@@ -29,6 +30,9 @@ public class CustomerController {
 
 	@Autowired
 	private CountryRepository countryRepository;
+
+	@Autowired
+	ShoppingCartService cartService;
 
 	@GetMapping("/register")
 	public String showRegisterForm(Model model) {
@@ -59,20 +63,27 @@ public class CustomerController {
 		model.addAttribute("customer", customer);
 		model.addAttribute("listAllCountries", listAllCountries);
 
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+                Integer quantityInCart = cartService.countQuantityinCart(customer);
+                model.addAttribute("quantityInCart", quantityInCart);
+
+        }
+
 		return "customer/account_form";
 	}
-	
+
 	@PostMapping("/update_account_details")
 	public String updateAccountDetails(Model model, Customer customer, RedirectAttributes ra,
 			HttpServletRequest request) {
 		customerService.updateCustomer(customer);
 		ra.addFlashAttribute("message", "Your account details have been updated");
-		
+
 		updateNameForAuthenticatedCustomer(customer, request);
-		
+
 		String redirectOption = request.getParameter("redirect");
 		String redirectURL = "redirect:/account_details";
-		
+
 		if ("address_book".equals(redirectOption)) {
 			redirectURL = "redirect:/address_book";
 		} else if ("cart".equals(redirectOption)) {
@@ -80,9 +91,9 @@ public class CustomerController {
 		} else if ("checkout".equals(redirectOption)) {
 			redirectURL = "redirect:/address_book?redirect=checkout";
 		}
-		
-		return redirectURL; 
-		
+
+		return redirectURL;
+
 	}
 
 	private String getEmailOfAuthenticatiedCustomer(HttpServletRequest request) {
@@ -109,7 +120,7 @@ public class CustomerController {
 			authenticatedCustomer.setLastName(customer.getLastName());
 		}
 	}
-	
+
 	private CustomerUserDetails getCustomerUserDetailsObject(Object principal) {
 		CustomerUserDetails userDetails = null;
 		if (principal instanceof UsernamePasswordAuthenticationToken) {
@@ -119,7 +130,7 @@ public class CustomerController {
 			RememberMeAuthenticationToken token = (RememberMeAuthenticationToken) principal;
 			userDetails = (CustomerUserDetails) token.getPrincipal();
 		}
-		
+
 		return userDetails;
 	}
 }
