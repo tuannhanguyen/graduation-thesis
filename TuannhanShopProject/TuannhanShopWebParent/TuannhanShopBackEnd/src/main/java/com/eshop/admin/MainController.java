@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.eshop.admin.category.CategoryService;
 import com.eshop.admin.customer.CustomerService;
 import com.eshop.admin.order.OrderService;
 import com.eshop.admin.product.ProductService;
@@ -25,6 +26,7 @@ public class MainController {
     @Autowired ReviewService reviewService;
     @Autowired CustomerService customerService;
     @Autowired OrderService orderService;
+    @Autowired CategoryService categoryService;
 
 	@GetMapping("/")
 	public String viewHomePage(Model model) {
@@ -63,6 +65,13 @@ public class MainController {
         model.addAttribute("countOrderShipping", countOrderShipping);
         model.addAttribute("countOrderProcessing", countOrderProcessing);
         model.addAttribute("countOrderCanceled", countOrderCanceled);
+        
+        int countRootCategory = categoryService.countRootCategory();
+        int countCategoryEnabled = categoryService.countCategoryEnabled();
+        int countCategoryDisabled = categoryService.countCategoryDisabled();
+        model.addAttribute("countRootCategory", countRootCategory);
+        model.addAttribute("countCategoryEnabled", countCategoryEnabled);
+        model.addAttribute("countCategoryDisabled", countCategoryDisabled);
 
 		return "index";
 	}

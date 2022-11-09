@@ -31,4 +31,10 @@ public interface CategoryRepository extends PagingAndSortingRepository<Category,
 	public void updateEnabled(Integer id, boolean enabled);
 
 	public Long countById(Integer id);
+	
+	@Query("SELECT COUNT(c.id) FROM Category c WHERE c.parent.id IS NULL")
+	public int countRootCategory();
+	
+	@Query("SELECT COUNT(c.id) FROM Category c WHERE c.enabled = ?1")
+	public int countStatusCategory(boolean status);
 }

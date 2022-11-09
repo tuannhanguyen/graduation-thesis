@@ -218,4 +218,16 @@ public class CategoryService {
 
 		categoryRepository.deleteById(id);
 	}
+	
+	public int countRootCategory() {
+		return categoryRepository.countRootCategory();
+	}
+	
+	public int countCategoryEnabled() {
+		return categoryRepository.countStatusCategory(true);
+	}
+	
+	public int countCategoryDisabled() {
+		return categoryRepository.countStatusCategory(false);
+	}
 }
