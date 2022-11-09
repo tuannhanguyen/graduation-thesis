@@ -21,4 +21,10 @@ public interface UserRepository extends PagingAndSortingRepository<User, Integer
 	@Modifying
 	public void updateEnabledStatus(Integer id, boolean enabled);
 
+	@Query("SELECT COUNT ( u.enabled )FROM User u WHERE u.enabled = true")
+	public int countUserEnabled();
+
+	@Query("SELECT COUNT ( u.enabled )FROM User u WHERE u.enabled = false")
+    public int countUserDisabled();
+
 }

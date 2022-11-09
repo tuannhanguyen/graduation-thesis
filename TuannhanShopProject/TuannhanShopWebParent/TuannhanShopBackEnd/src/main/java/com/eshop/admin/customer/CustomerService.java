@@ -47,7 +47,7 @@ public class CustomerService {
 		} else {
 			customerInForm.setPassword(customerInDB.getPassword());
 		}
-		
+
 		customerInForm.setEnabled(customerInDB.isEnabled());
 		customerInForm.setCreatedTime(customerInDB.getCreatedTime());
 		customerInForm.setVerificationCode(customerInDB.getVerificationCode());
@@ -87,4 +87,12 @@ public class CustomerService {
 	public void updateCustomerEnabledStatus(Integer id, boolean enabled) {
 		customerRepository.updateEnabledStatus(id, enabled);
 	}
+
+	public int countCustomerEnabled() {
+	    return customerRepository.countCustomerEnabled();
+	}
+
+	public int countCustomerDisabled() {
+        return customerRepository.countCustomerDisabled();
+    }
 }

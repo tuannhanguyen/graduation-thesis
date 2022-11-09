@@ -22,5 +22,10 @@ public interface CustomerRepository extends PagingAndSortingRepository<Customer,
 	@Modifying
 	public void updateEnabledStatus(Integer id, boolean enabled);
 
+	@Query("SELECT COUNT (c.enabled) FROM Customer c WHERE c.enabled = true")
+	public int countCustomerEnabled();
+
+	@Query("SELECT COUNT (c.enabled) FROM Customer c WHERE c.enabled = false")
+    public int countCustomerDisabled();
 
 }

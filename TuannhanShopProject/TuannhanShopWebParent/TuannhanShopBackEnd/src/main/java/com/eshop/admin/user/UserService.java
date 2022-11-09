@@ -68,22 +68,22 @@ public class UserService {
 
 		return userRepository.save(user);
 	}
-	
+
 	public User updateAccount(User userInForm) {
 		User userInDb = userRepository.findById(userInForm.getId()).get();
-		
+
 		if(!userInDb.getPassword().isEmpty()) {
 			userInDb.setPassword(userInForm.getPassword());
 			encodedPassword(userInDb);
 		}
-		
+
 		if (userInForm.getPhotos() != null) {
 			userInDb.setPhotos(userInForm.getPhotos());
 		}
-		
+
 		userInDb.setFirstName(userInForm.getFirstName());
 		userInDb.setLastName(userInForm.getLastName());
-		
+
 		return userRepository.save(userInDb);
 	}
 
@@ -130,4 +130,12 @@ public class UserService {
 	public void updateUserEnabledStatus(Integer id, boolean enabled) {
 		userRepository.updateEnabledStatus(id, enabled);
 	}
+
+	public int countUserEnabled() {
+	    return userRepository.countUserEnabled();
+	}
+
+	public int countUserDisabled() {
+        return userRepository.countUserDisabled();
+    }
 }

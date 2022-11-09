@@ -64,4 +64,8 @@ public class ReviewService {
 
         reviewRepo.deleteById(id);
     }
+
+    public int countProductReviewed() {
+        return reviewRepo.countProductReviewed();
+    }
 }

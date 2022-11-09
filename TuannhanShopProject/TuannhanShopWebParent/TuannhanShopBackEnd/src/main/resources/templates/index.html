@@ -22,8 +22,10 @@
 					<div class="card">
 						<h5 class="card-header">Users</h5>
 						<div class="card-body">
-							<a th:href="@{/users/new}">Add new user</a><br> <a
-								th:href="@{/users}">View all</a>
+							<a th:href="@{/users/new}">Add new user</a><br> 
+								<div>Enabled: <b>[[${countUserEnabled}]]</b></div>
+								<div>Disabled: <b>[[${countUserDisabled}]]</b></div>
+						     <a th:href="@{/users}">View all</a>
 						</div>
 					</div>
 				</div>
@@ -50,6 +52,10 @@
 						<h5 class="card-header">Products</h5>
 						<div class="card-body">
 							<a  th:href="@{/products/new}">Add new product</a><br> 
+							<div>Enabled: <b>[[${countProductEnabled}]]</b></div>
+                            <div>Disabled: <b>[[${countProductDisabled}]]</b></div>
+                            <div>In Stock: <b>[[${countProductInStock}]]</b></div>
+                            <div>Out of Stock: <b>[[${countProductOutStock}]]</b></div>
 							<a th:href="@{/products}">View all</a>
 						</div>
 					</div>
@@ -59,6 +65,8 @@
 						<h5 class="card-header">Customers</h5>
 						<div class="card-body">
 							<a th:href="@{/customers}">View all</a><br>
+							<div>Enabled: <b>[[${countCustomerEnabled}]]</b></div>
+                            <div>Disabled: <b>[[${countCustomerDisabled}]]</b></div>
 						</div>
 					</div>
 				</div>
@@ -67,6 +75,7 @@
 						<h5 class="card-header">Shipping Rates</h5>
 						<div class="card-body">
 							<a th:href="@{/shipping_rates/new}">Add new rate</a><br>
+							<div>COD Supported: <b>[[${countCodSupported}]]</b></div>
 							<a th:href="@{/shipping_rates}">View all</a>
 						</div>
 					</div>
@@ -76,6 +85,11 @@
 						<h5 class="card-header">Orders</h5>
 						<div class="card-body">
 							<a th:href="@{/orders}">View all</a><br>
+							<div>New: <b>[[${countOrderNew}]]</b></div>
+							<div>Delivered: <b>[[${countOrderDelivered}]]</b></div>
+                            <div>Processing: <b>[[${countOrderProcessing}]]</b></div>
+                            <div>Shipping: <b>[[${countOrderShipping}]]</b></div>
+                            <div>Canceled: <b>[[${countOrderCanceled}]]</b></div>
 						</div>
 					</div>
 				</div>
@@ -84,6 +98,7 @@
 						<h5 class="card-header">Reviews</h5>
 						<div class="card-body">
 							<a th:href="@{/reviews}">View all</a><br>
+							<div>Reviewed Products: <b>[[${countProductReviewed}]]</b></div>
 						</div>
 					</div>
 				</div>

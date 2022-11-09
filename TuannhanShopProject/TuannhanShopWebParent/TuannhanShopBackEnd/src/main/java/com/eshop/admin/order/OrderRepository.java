@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.eshop.admin.paging.SearchRepository;
 import com.eshop.common.entity.Order;
+import com.eshop.common.entity.OrderStatus;
 
 public interface OrderRepository extends SearchRepository<Order, Integer> {
 
@@ -31,4 +32,7 @@ public interface OrderRepository extends SearchRepository<Order, Integer> {
 			+ " o.subtotal, o.total) FROM Order o WHERE"
 			+ " o.orderTime BETWEEN ?1 AND ?2 ORDER BY o.orderTime ASC")
 	public List<Order> findByOrderTimeBetween(Date startTime, Date endTime);
+
+	@Query("SELECT COUNT(o.status) FROM Order o WHERE o.status = ?1")
+	public int countOrderStatus(OrderStatus status);
 }

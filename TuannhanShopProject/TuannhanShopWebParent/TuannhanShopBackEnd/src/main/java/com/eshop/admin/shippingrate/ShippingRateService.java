@@ -22,15 +22,15 @@ import com.eshop.common.entity.ShippingRate;
 @Transactional
 public class ShippingRateService {
 	public static final int RATES_PER_PAGE = 10;
-	private static final int DIM_DIVISOR = 139;	
+	private static final int DIM_DIVISOR = 139;
 	@Autowired private ShippingRateRepository shipRepo;
 	@Autowired private CountryRepository countryRepo;
 	@Autowired private ProductRepository productRepo;
-	
+
 //	public void listByPage(int pageNum, PagingAndSortingHelper helper) {
 //		helper.listEntities(pageNum, RATES_PER_PAGE, shipRepo);
-//	}	
-	
+//	}
+
 	public Page<ShippingRate> listByPage(int pageNum, String sortField, String sortDir, String keyword) {
 		Sort sort = Sort.by(sortField);
 		sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
@@ -42,20 +42,20 @@ public class ShippingRateService {
 
 		return shipRepo.findAll(pageable);
 	}
-	
+
 	public List<Country> listAllCountries() {
 		return countryRepo.findAllByOrderByNameAsc();
-	}		
-	
+	}
+
 	public void save(ShippingRate rateInForm) throws ShippingRateAlreadyExistsException {
 		ShippingRate rateInDB = shipRepo.findByCountryAndState(
 				rateInForm.getCountry().getId(), rateInForm.getState());
 		boolean foundExistingRateInNewMode = rateInForm.getId() == null && rateInDB != null;
 		boolean foundDifferentExistingRateInEditMode = rateInForm.getId() != null && rateInDB != null && !rateInDB.equals(rateInForm);
-		
+
 		if (foundExistingRateInNewMode || foundDifferentExistingRateInEditMode) {
 			throw new ShippingRateAlreadyExistsException("There's already a rate for the destination "
-						+ rateInForm.getCountry().getName() + ", " + rateInForm.getState()); 					
+						+ rateInForm.getCountry().getName() + ", " + rateInForm.getState());
 		}
 		shipRepo.save(rateInForm);
 	}
@@ -67,39 +67,43 @@ public class ShippingRateService {
 			throw new ShippingRateNotFoundException("Could not find shipping rate with ID " + id);
 		}
 	}
-	
+
 	public void updateCODSupport(Integer id, boolean codSupported) throws ShippingRateNotFoundException {
 		Long count = shipRepo.countById(id);
 		if (count == null || count == 0) {
 			throw new ShippingRateNotFoundException("Could not find shipping rate with ID " + id);
 		}
-		
+
 		shipRepo.updateCODSupport(id, codSupported);
 	}
-	
+
 	public void delete(Integer id) throws ShippingRateNotFoundException {
 		Long count = shipRepo.countById(id);
 		if (count == null || count == 0) {
 			throw new ShippingRateNotFoundException("Could not find shipping rate with ID " + id);
-			
+
 		}
 		shipRepo.deleteById(id);
 	}
-	
-	public float calculateShippingCost(Integer productId, Integer countryId, String state) 
+
+	public float calculateShippingCost(Integer productId, Integer countryId, String state)
 			throws ShippingRateNotFoundException {
 		ShippingRate shippingRate = shipRepo.findByCountryAndState(countryId, state);
-		
+
 		if (shippingRate == null) {
 			throw new ShippingRateNotFoundException("No shipping rate found for the given "
 					+ "destination. You have to enter shipping cost manually.");
 		}
-		
+
 		Product product = productRepo.findById(productId).get();
-		
+
 		float dimWeight = (product.getLength() * product.getWidth() * product.getHeight()) / DIM_DIVISOR;
 		float finalWeight = product.getWeight() > dimWeight ? product.getWeight() : dimWeight;
-				
+
 		return finalWeight * shippingRate.getRate();
+	}
+
+	public int countCodSupported() {
+	    return shipRepo.countCodSupported();
 	}
 }

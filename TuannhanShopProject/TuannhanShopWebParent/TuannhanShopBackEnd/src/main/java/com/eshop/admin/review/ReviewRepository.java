@@ -19,4 +19,7 @@ public interface ReviewRepository extends SearchRepository<Review, Integer> {
 
     @Override
     public List<Review> findAll();
+
+    @Query("SELECT COUNT(DISTINCT r.product.id) FROM Review r")
+    public int countProductReviewed();
 }

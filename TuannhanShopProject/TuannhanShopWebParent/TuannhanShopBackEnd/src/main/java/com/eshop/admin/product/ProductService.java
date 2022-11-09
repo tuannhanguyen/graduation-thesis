@@ -115,12 +115,27 @@ public class ProductService {
 			throw new ProductNotFoundException("Could not find any product with ID " + id);
 		}
 	}
-	
+
 	public void searchProducts(int pageNum, PagingAndSortingHelper helper) {
 		Pageable pageable = helper.createPageable(PRODUCTS_PER_PAGE, pageNum);
-		String keyword = helper.getKeyword();		
-		Page<Product> page = productRepository.searchProductsByName(keyword, pageable);		
+		String keyword = helper.getKeyword();
+		Page<Product> page = productRepository.searchProductsByName(keyword, pageable);
 		helper.updateModelAttributes(pageNum, page);
 	}
 
+	public int countProductEnabled() {
+	    return productRepository.countProductEnabled();
+	}
+
+	public int countProductDisabled() {
+        return productRepository.countProductDisabled();
+    }
+
+	public int countProductInStock() {
+	    return productRepository.countProductInStock();
+	}
+
+	public int countProductOutStock() {
+	    return productRepository.countProductOutStock();
+	}
 }
