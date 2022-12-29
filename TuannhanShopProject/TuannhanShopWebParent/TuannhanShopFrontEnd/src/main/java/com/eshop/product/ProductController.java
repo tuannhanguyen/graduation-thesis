@@ -3,6 +3,7 @@ package com.eshop.product;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,6 +36,8 @@ public class ProductController {
     @Autowired private ReviewVoteService voteService;
     @Autowired private ControllerHelper controllerHelper;
     @Autowired ShoppingCartService cartService;
+    @Autowired
+    private HttpSession httpSession;
 
 	@GetMapping("/c/{category_alias}")
 	public String viewCategoryFirstPage(@PathVariable("category_alias") String alias,
@@ -55,6 +58,7 @@ public class ProductController {
 
 		Page<Product> pageProducts = productService.listByCategories(pageNum, category.getId());
 		List<Product> listProducts = pageProducts.getContent();
+		httpSession.setAttribute("listProducts", listProducts);
 
 		long startCount = (pageNum - 1) * ProductService.PRODUCTS_PER_PAGE + 1;
 		long endCount = startCount + ProductService.PRODUCTS_PER_PAGE - 1;
@@ -106,10 +110,13 @@ public class ProductController {
 				}
 			}
 
+			List<Product> listProducts = (List<Product>) httpSession.getAttribute("listProducts");
+
 			model.addAttribute("product", product);
 			model.addAttribute("listReviews", listReviews);
 			model.addAttribute("listCategoryParents", listCategoryParents);
 			model.addAttribute("pageTitle", product.getName());
+			model.addAttribute("listProducts", listProducts);
 
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {

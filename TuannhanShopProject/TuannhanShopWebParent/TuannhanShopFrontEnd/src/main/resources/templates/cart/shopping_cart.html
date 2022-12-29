@@ -96,6 +96,30 @@
     decimalPointType = 'COMMA'
     thousandsPointType = 'POINT'
     
+    
+    
+     $(document).ready(function() {
+       $(".linkPlus").on('click', function() {
+        contextPath = "[[@{/}]]";
+        url = contextPath + "cart/getQty";
+        
+        $.get(url, function(responseJSON) {
+            var qty = parseInt(responseJSON)
+            $("#quantityInCart").text(qty + 1)
+        })
+    })
+    
+    $(".linkMinus").on('click', function() {
+        contextPath = "[[@{/}]]";
+        url = contextPath + "cart/getQty";
+        
+        $.get(url, function(responseJSON) {
+            var qty = parseInt(responseJSON)
+            $("#quantityInCart").text(qty - 1)
+        })
+    })
+    });
+    
 </script>
 <script type="text/javascript" th:src="@{/js/jquery.number.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/shopping_cart.js}"></script>
