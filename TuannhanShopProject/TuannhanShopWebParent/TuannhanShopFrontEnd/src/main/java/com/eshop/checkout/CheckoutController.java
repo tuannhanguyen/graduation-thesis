@@ -3,6 +3,7 @@ package com.eshop.checkout;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.mail.MessagingException;
@@ -28,12 +29,15 @@ import com.eshop.common.entity.Address;
 import com.eshop.common.entity.CartItem;
 import com.eshop.common.entity.Customer;
 import com.eshop.common.entity.Order;
+import com.eshop.common.entity.OrderDetail;
 import com.eshop.common.entity.PaymentMethod;
 import com.eshop.common.entity.ShippingRate;
 import com.eshop.customer.CustomerNotFoundException;
 import com.eshop.customer.CustomerService;
 import com.eshop.order.OrderService;
 import com.eshop.setting.CurrencySettingBag;
+import com.eshop.setting.EmailDetails;
+import com.eshop.setting.EmailService;
 import com.eshop.setting.EmailSettingBag;
 import com.eshop.setting.PaymentSettingBag;
 import com.eshop.setting.SettingService;
@@ -51,6 +55,7 @@ public class CheckoutController {
 	@Autowired private SettingService settingService;
 	@Autowired private PayPalService paypalService;
 	@Autowired private CustomerService customerService;
+	@Autowired private EmailService emailService;
 
 	@GetMapping("/checkout")
 	public String showCheckoutPage(Model model, HttpServletRequest request) throws CustomerNotFoundException {
@@ -95,7 +100,7 @@ public class CheckoutController {
 	}
 
 	@PostMapping("/place_order")
-	public String placeOrder(HttpServletRequest request, Model model)
+	public String placeOrder(HttpServletRequest request, Model model, EmailDetails emailDetails)
 			throws UnsupportedEncodingException, MessagingException, CustomerNotFoundException {
 		String paymentType = request.getParameter("paymentMethod");
 		PaymentMethod paymentMethod = PaymentMethod.valueOf(paymentType);
@@ -116,7 +121,7 @@ public class CheckoutController {
 
 		Order createdOrder = orderService.createOrder(customer, defaultAddress, cartItems, paymentMethod, checkoutInfo);
 		cartService.deleteByCustomer(customer);
-		//sendOrderConfirmationEmail(request, createdOrder);
+		sendEmail(emailDetails, createdOrder);
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
@@ -126,6 +131,39 @@ public class CheckoutController {
         }
 
 		return "checkout/order_completed";
+	}
+
+	public void sendEmail(EmailDetails details, Order order) {
+	    details.setSubject("Order from Shopme Website");
+
+	    java.util.Set<OrderDetail> orderDetails = order.getOrderDetails();
+
+	    String welcome = "Dear " + order.getCustomer().getLastName() + ", " + "\n" + "You have successfully placed an order at Shopme. Below is your order information: " + "\n";
+	    String listProducts = "- List Products: " + "\n";
+	    String totalPrice = "- Total price: " + order.getTotal() + "$" + "\n";
+	    String recipientName = "- Recipient's name: " + order.getRecipientName() + "\n";
+	    String thanks = "Thank you !";
+
+	    String pattern = "dd/MM/yyyy";
+	    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+	    String deliverDate = simpleDateFormat.format(order.getDeliverDate());
+
+	    for (OrderDetail orderDetail : orderDetails) {
+	        listProducts += "#" + orderDetail.getProduct().getId() + "       " + orderDetail.getProduct().getName() + " (Quantity: " + orderDetail.getQuantity() + ")" + "\n";
+        }
+
+        String content = welcome + "\n" + "- Order ID: " + order.getId() + "\n" +
+                "- Customer : " + order.getCustomer().getEmail() + "\n" +
+                recipientName + totalPrice +
+        "- Shipping Address: " + order.getShippingAddress() + "\n"
+        + "- Delivery Date: " + deliverDate + "\n"
+        + listProducts + "\n" + thanks;
+
+	    details.setMsgBody(content);
+	    details.setRecipient(order.getCustomer().getEmail());
+
+	    emailService.sendSimpleMail(details);
 	}
 
 	private void sendOrderConfirmationEmail(HttpServletRequest request, Order order)
@@ -166,7 +204,7 @@ public class CheckoutController {
 	}
 
 	@PostMapping("/process_paypal_order")
-	public String processPayPalOrder(HttpServletRequest request, Model model)
+	public String processPayPalOrder(HttpServletRequest request, Model model, EmailDetails emailDetails)
 			throws UnsupportedEncodingException, MessagingException, CustomerNotFoundException {
 		String orderId = request.getParameter("orderId");
 
@@ -183,7 +221,7 @@ public class CheckoutController {
 
 		try {
 			if (paypalService.validateOrder(orderId)) {
-				return placeOrder(request, model);
+				return placeOrder(request, model, emailDetails);
 			} else {
 				pageTitle = "Checkout Failure";
 				message = "ERROR: Transaction could not be completed because order information is invalid";
