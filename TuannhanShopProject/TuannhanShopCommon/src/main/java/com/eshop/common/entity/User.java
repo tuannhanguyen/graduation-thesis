@@ -39,6 +39,9 @@ public class User {
 	@Column(length = 64)
 	private String photos;
 
+	@Column(name = "verification_code", length = 6)
+    private String verificationCode;
+
 	private boolean enabled;
 
 	@ManyToMany(fetch = FetchType.EAGER)

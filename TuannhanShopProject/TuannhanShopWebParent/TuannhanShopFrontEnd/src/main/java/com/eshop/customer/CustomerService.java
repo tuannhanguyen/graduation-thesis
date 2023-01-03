@@ -49,7 +49,11 @@ public class CustomerService {
 	public Customer getCustomerByEmail(String email) {
 		return customerRepository.findByEmail(email);
 	}
-	
+
+	public Customer getCustomerByVerificationCode(String verificationCode) {
+	    return customerRepository.findByVerificationCode(verificationCode);
+	}
+
 	public void updateCustomer(Customer customerInForm) {
 		Customer customerInDB = customerRepository.findById(customerInForm.getId()).get();
 		customerInForm.setCreatedTime(customerInDB.getCreatedTime());
