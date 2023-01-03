@@ -1,11 +1,11 @@
 package com.eshop.customer;
 
-import java.text.SimpleDateFormat;
+import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.RememberMeAuthenticationToken;
@@ -22,8 +22,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.eshop.Utility;
 import com.eshop.common.entity.Country;
 import com.eshop.common.entity.Customer;
-import com.eshop.common.entity.Order;
-import com.eshop.common.entity.OrderDetail;
 import com.eshop.security.CustomerUserDetails;
 import com.eshop.setting.CountryRepository;
 import com.eshop.setting.EmailDetails;
@@ -151,7 +149,16 @@ public class CustomerController {
 
 	@PostMapping("/forgot_password")
     public String resetPasswordForm(@RequestParam String email, HttpServletRequest request, Model model) throws CustomerNotFoundException {
-	    String generatedString = RandomStringUtils.randomAlphabetic(6);
+		int leftLimit = 97; // letter 'a'
+	    int rightLimit = 122; // letter 'z'
+	    int targetStringLength = 10;
+	    Random random = new Random();
+
+	    String generatedString = random.ints(leftLimit, rightLimit + 1)
+	      .limit(targetStringLength)
+	      .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+	      .toString();
+	    
 	    EmailDetails emailDetails = new EmailDetails();
 	    emailDetails.setRecipient(email);
 	    emailDetails.setSubject("Reset Password");
