@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -41,6 +42,8 @@ public class CustomerController {
 	ShoppingCartService cartService;
 
 	@Autowired private EmailService emailService;
+
+	@Autowired HttpSession httpSession;
 
 	@GetMapping("/register")
 	public String showRegisterForm(Model model) {
@@ -158,7 +161,7 @@ public class CustomerController {
 	      .limit(targetStringLength)
 	      .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
 	      .toString();
-	    
+
 	    EmailDetails emailDetails = new EmailDetails();
 	    emailDetails.setRecipient(email);
 	    emailDetails.setSubject("Reset Password");
@@ -171,7 +174,7 @@ public class CustomerController {
 	    }
 
 	    emailService.sendSimpleMail(emailDetails);
-	    model.addAttribute("message", "Please check your email.");
+	    model.addAttribute("message", "Please check your email");
 
 
         return "customer/message";
@@ -181,11 +184,28 @@ public class CustomerController {
 	public String resetPasswordForm(@RequestParam String verification_code, Model model) {
 	    Customer customerByVerificationCode = customerService.getCustomerByVerificationCode(verification_code);
 	    if (customerByVerificationCode == null) {
-	        model.addAttribute("message", "Verification code Invalid.");
+	        model.addAttribute("message", "Verification code invalid");
 	        return "customer/message.html";
 	    }
+	    httpSession.setAttribute("verification_code", verification_code);
 	    return "customer/reset_password_form";
 	}
+
+	@PostMapping("/reset_password")
+    public String resetPassword(@RequestParam String password, Model model) {
+	    String verification_code = (String) httpSession.getAttribute("verification_code");
+        Customer customerByVerificationCode = customerService.getCustomerByVerificationCode(verification_code);
+        customerByVerificationCode.setPassword(password);
+        customerByVerificationCode.setVerificationCode(null);
+        customerService.updateCustomer(customerByVerificationCode);
+//        if (customerByVerificationCode == null) {
+//            model.addAttribute("message", "Success");
+//            return "customer/message.html";
+//        }
+        httpSession.removeAttribute("verification_code");
+        model.addAttribute("message", "You have successfully changed your password");
+        return "customer/message";
+    }
 
 //	public void sendEmail(EmailDetails details) {
 //        details.setSubject("Order from Shopme Website");
