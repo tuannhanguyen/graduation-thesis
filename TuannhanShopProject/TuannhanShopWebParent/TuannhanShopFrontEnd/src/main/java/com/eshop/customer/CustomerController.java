@@ -58,10 +58,49 @@ public class CustomerController {
 
 	@PostMapping("/create_customer")
 	public String createCustomer(Customer customer, Model model) {
-		customerService.registerCustomer(customer);
+	    EmailDetails emailDetails = new EmailDetails();
+	    emailDetails.setSubject("Register new account");
+	    emailDetails.setRecipient(customer.getEmail());
 
-		model.addAttribute("pageTitle", "Registration Succeeded!");
-		return "/register/register_success";
+	    int leftLimit = 97; // letter 'a'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = 10;
+        Random random = new Random();
+
+        String generatedString = random.ints(leftLimit, rightLimit + 1)
+          .limit(targetStringLength)
+          .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+          .toString();
+        String content = "http://localhost/Shopme/register/verify?verification_code=" + generatedString;
+        emailDetails.setMsgBody(content);
+        emailService.sendSimpleMail(emailDetails);
+
+        httpSession.setAttribute("verification_code_register", generatedString);
+        httpSession.setAttribute("customer_session", customer);
+
+		model.addAttribute("message", "Check your email to verify");
+		model.addAttribute("pageTitle", "Register");
+		return "customer/message";
+	}
+
+	@GetMapping("/register/verify")
+	public String registerSuccess(HttpServletRequest request, Model model) {
+	    String verification_code = request.getParameter("verification_code");
+	    String verification_code_session = (String) httpSession.getAttribute("verification_code_register");
+
+	    if (!verification_code.equals(verification_code_session)) {
+	        model.addAttribute("message", "Verification code invalid");
+	        model.addAttribute("pageTitle", "Verification code invalid");
+	        return "customer/message";
+	    }
+
+        Customer customer = (Customer) httpSession.getAttribute("customer_session");
+        customerService.registerCustomer(customer);
+        httpSession.removeAttribute("customer_session");
+
+        model.addAttribute("pageTitle", "Register success");
+
+	    return "/register/register_success";
 	}
 
 	@GetMapping("/account_details")
@@ -176,6 +215,7 @@ public class CustomerController {
 	    emailService.sendSimpleMail(emailDetails);
 	    model.addAttribute("message", "Please check your email");
 
+	    model.addAttribute("pageTitle", "Forgot password");
 
         return "customer/message";
     }
@@ -204,43 +244,9 @@ public class CustomerController {
 //        }
         httpSession.removeAttribute("verification_code");
         model.addAttribute("message", "You have successfully changed your password");
+        model.addAttribute("pageTitle", "Forgot password");
         return "customer/message";
     }
-
-//	public void sendEmail(EmailDetails details) {
-//        details.setSubject("Order from Shopme Website");
-//
-//        String.ran
-//
-//        java.util.Set<OrderDetail> orderDetails = order.getOrderDetails();
-//
-//        String welcome = "Dear " + order.getCustomer().getLastName() + ", " + "\n" + "You have successfully placed an order at Shopme. Below is your order information: " + "\n";
-//        String listProducts = "- List Products: " + "\n";
-//        String totalPrice = "- Total price: " + order.getTotal() + "$" + "\n";
-//        String recipientName = "- Recipient's name: " + order.getRecipientName() + "\n";
-//        String thanks = "Thank you !";
-//
-//        String pattern = "dd/MM/yyyy";
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-//
-//        String deliverDate = simpleDateFormat.format(order.getDeliverDate());
-//
-//        for (OrderDetail orderDetail : orderDetails) {
-//            listProducts += "#" + orderDetail.getProduct().getId() + "       " + orderDetail.getProduct().getName() + " (Quantity: " + orderDetail.getQuantity() + ")" + "\n";
-//        }
-//
-//        String content = welcome + "\n" + "- Order ID: " + order.getId() + "\n" +
-//                "- Customer : " + order.getCustomer().getEmail() + "\n" +
-//                recipientName + totalPrice +
-//        "- Shipping Address: " + order.getShippingAddress() + "\n"
-//        + "- Delivery Date: " + deliverDate + "\n"
-//        + listProducts + "\n" + thanks;
-//
-//        details.setMsgBody(content);
-//        details.setRecipient(order.getCustomer().getEmail());
-//
-//        emailService.sendSimpleMail(details);
-//    }
 
 	private Customer getAuthenticatedCustomer(HttpServletRequest request) throws CustomerNotFoundException {
         String email = Utility.getEmailOfAuthenticatedCustomer(request);
